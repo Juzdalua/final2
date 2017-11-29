@@ -66,7 +66,7 @@
       		<th><a href="#">영화관</a></th>
       		<th><a href="#">스토어</a></th>
       		<th><a href="#">이벤트</a></th>
-      		<th><a href="#">고객센터</a></th>
+      		<th><a href="<%= request.getContextPath()%>/service/list1.pz">고객센터</a></th>
       		<c:if test="${sessionScope.loginuser == null }">      		
       			<th><a href="<%=request.getContextPath()%>/login.pz">로그인</a></th>
       		</c:if>

@@ -30,4 +30,6 @@ public class PlzService implements IPlzService {
 		MemberVO mvo = memberdao.getLoginMember(userid);
 		return mvo;
 	}
+	
+	
 }

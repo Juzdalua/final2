@@ -10,4 +10,5 @@ public interface IPlzService {
 
 	MemberVO getLoginMember(String userid);
 
+
 }
