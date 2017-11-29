@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ==== mapper 기본 설정 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- ==== 루트 엘리먼트 및 네임스페이스 설정하기(이 네임스페이스의 이름은 프로젝트 전체 내에서 반드시 고유해야만 한다.) --> 
+<mapper namespace="plz">
+	
+	<!-- 로그인 sql -->
+	<select id="loginEnd" parameterType="HashMap" resultType="int">
+	
+		select case (select count(*)
+		            from jsp_member
+		            where status = 1
+		            and userid = #{userid} and pwd = #{pwd})
+		        when 1 then 1
+		        else (case (select count(*)
+		            from jsp_member
+		            where status = 1
+		            and userid = #{userid})
+		        when 1 then 0
+		        else -1
+		        end)
+		        end as logincheck
+		from dual
+	
+	</select>
+	
+	<select id="getLoginMember" parameterType="String" resultType="com.plz.member.model.MemberVO">
+	
+		select idx, name, userid, pwd, email, hp1, hp2, hp3, post1, post2
+		, addr1, addr2, to_char(joindate,'yyyy-mm-dd') as joindate
+		, status, coin, point, gradelevel
+		from jsp_member
+		where userid = #{userid}
+			
+	</select>
+	
+
+</mapper> 
