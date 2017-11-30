@@ -44,12 +44,12 @@ public class HomeController {
 	@RequestMapping(value="/loginEnd.pz",method={RequestMethod.POST})
 	public String loginEnd(HttpServletRequest req, MemberVO loginuser, HttpSession session){
 		
-		String userid = req.getParameter("userid");
-		String pwd = req.getParameter("pwd");
+		String userid = req.getParameter("email");
+		String pwd = req.getParameter("passwd");
 		
 		HashMap<String, String> map = new HashMap<String, String>();
-		map.put("userid", userid);
-		map.put("pwd", pwd);
+		map.put("email", userid);
+		map.put("passwd", pwd);
 		
 		int n = service.loginEnd(map);
 		req.setAttribute("n", n);

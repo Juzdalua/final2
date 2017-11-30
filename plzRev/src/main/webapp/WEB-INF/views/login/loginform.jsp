@@ -38,28 +38,28 @@
     	
     	if(${sessionScope.loginuser != null}) {
 			 alert("이미 로그인을 하신 상태 입니다 !!");
-			 $("#userid").val(""); 
-			 $("#pwd").val("");
-			 $("#userid").focus();
+			 $("#email").val(""); 
+			 $("#passwd").val("");
+			 $("#email").focus();
 			 event.preventDefault();
 			 return; 
 		 }
 		 
-		 var userid = $("#userid").val(); 
-		 var pwd = $("#pwd").val(); 
+		 var userid = $("#email").val(); 
+		 var pwd = $("#passwd").val(); 
 		
 		 if(userid.trim()=="") {
 		 	 alert("아이디를 입력하세요!!");
-			 $("#userid").val(""); 
-			 $("#userid").focus();
+			 $("#email").val(""); 
+			 $("#email").focus();
 			 event.preventDefault();
 			 return;
 		 }
 		
 		 if(pwd.trim()=="") {
 			 alert("비밀번호를 입력하세요!!");
-			 $("#pwd").val(""); 
-			 $("#pwd").focus();
+			 $("#passwd").val(""); 
+			 $("#passwd").focus();
 			 event.preventDefault();
 			 return;
 		 }
@@ -85,8 +85,8 @@
 			</div>
 			
 			<div class="mydiv" style="margin-left: 5%;">
-				<input class="mydisplay form-control" type="text" name="userid" id="userid" size="20" />
-				<input class="mydisplay form-control" style="margin-top: 15px;" type="password" name="pwd" id="pwd" size="20" /> 
+				<input class="mydisplay form-control" type="text" name="email" id="email" size="20" />
+				<input class="mydisplay form-control" style="margin-top: 15px;" type="password" name="passwd" id="passwd" size="20" /> 
 			</div>
 			
 			<div class="mydiv" style="margin-left: 10%;">
