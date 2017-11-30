@@ -50,6 +50,7 @@
       }
 </style>
 
+<script src="<%=request.getContextPath() %>/resources/js/jquery-2.0.0.js" ></script>
 <script src="<%=request.getContextPath()%>/resources/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
     
 <script>    
@@ -58,11 +59,12 @@
 </script>
 
 <body>
-    <div id="fixed-menu" align="center" style="border-bottom:1px solid #e6e6e6; height:50px;">
+    <div class="navbar-fixed-top" id="fixed-menu" align="center" style="border-bottom:1px solid #e6e6e6; height:50px;">
       <table>
       	<tr style="border-left:none; border-right:none;">
       		<th style="border-left:none;"><a href="index.pz"><img src="<%=request.getContextPath() %>/resources/images/megabox.png"></a></th>
-      		<th><a href="#">영화</a></th>
+      		<th><a href="jun_movie.pz">영화</a></th>
+      		<th><a href="booking.pz">예매</a></th>
       		<th><a href="#">영화관</a></th>
       		<th><a href="#">스토어</a></th>
       		<th><a href="#">이벤트</a></th>
