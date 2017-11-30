@@ -19,10 +19,10 @@
   <script type="text/javascript" src="<%=request.getContextPath() %>/resources/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
     
   <style type="text/css">
-  	#mycontainer	{ width:90%; margin:0 auto; padding:20px; }
+  	#mycontainer	{ width:100%; margin:0 auto; }
 	#myheader		{  height:56px; padding: 10px; }
-	#mycontent		{  width:80%; min-height:800px; padding-top: 40px; margin: auto 0;}
-	#myfooter		{  height:100px; }
+	#mycontent		{  width:100%; min-height:800px; padding-top: 40px; margin: auto 0;}
+	#myfooter		{  width:100%; height:100px; }
 	
 	
 	</style>
