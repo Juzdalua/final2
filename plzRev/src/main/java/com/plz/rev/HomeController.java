@@ -24,12 +24,12 @@ public class HomeController {
 	@Autowired
 	private IPlzService service;
 	
-	//메인페이지
+	//메인페이지                      
 	@RequestMapping(value = "/index.pz", method = RequestMethod.GET)
 	public String index() {		
 		
 		return "index.tiles";
-	}
+	}     
 		
 	
 	// ====  로그인 페이지 요청. =====
