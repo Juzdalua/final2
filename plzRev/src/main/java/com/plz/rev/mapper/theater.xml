@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<!-- ==== #162. 매퍼 XML 파일 생성하기 ===== -->
+
+<mapper namespace="theater">
+    
+	<select id="regionList" resultType="com.plz.khk.model.RegionVO">
+	
+	select regionno ,regionname
+	from tbl_region
+	order by regionno asc;
+	
+	
+	</select>
+	
+
+</mapper>
+
+
