@@ -46,7 +46,7 @@
       	color: black;      	
       }
       a:hover, a:active{
-      	text-decoration: none;
+      	text-decoration: none !important;
       }
 </style>
 
@@ -58,7 +58,7 @@
 </script>
 
 <body>
-    <div id="fixed-menu" align="center" style="border-bottom:1px solid #e6e6e6; height:50px;">
+    <div class="navbar-fixed-top" id="fixed-menu" align="center" style="border-bottom:1px solid #e6e6e6; height:50px;">
       <table>
       	<tr style="border-left:none; border-right:none;">
       		<th style="border-left:none;"><a href="index.pz"><img src="<%=request.getContextPath() %>/resources/images/megabox.png"></a></th>
@@ -71,7 +71,7 @@
       			<th><a href="<%=request.getContextPath()%>/login.pz">로그인</a></th>
       		</c:if>
       		<c:if test="${sessionScope.loginuser != null }">      		
-      			<th><a href="#">MY페이지</a></th>
+      			<th><a href="mypage.pz">MY페이지</a></th>
       			<th><a href="<%=request.getContextPath()%>/logout.pz">로그아웃</a></th>
       		</c:if>
       	</tr>
