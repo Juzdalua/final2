@@ -73,7 +73,7 @@
       			<th><a href="<%=request.getContextPath()%>/login.pz">로그인</a></th>
       		</c:if>
       		<c:if test="${sessionScope.loginuser != null }">      		
-      			<th><a href="mypage.pz">MY페이지</a></th>
+      			<th><a href="">MY페이지</a></th>
       			<th><a href="<%=request.getContextPath()%>/logout.pz">로그아웃</a></th>
       		</c:if>
       	</tr>
