@@ -11,6 +11,7 @@ public class TheaterVO {
 	private double theaterlatitude;		// 극장위치위도
 	private double theaterlongitude;	// 극장위치경도
 	
+	
 	public TheaterVO() { }
 
 	public TheaterVO(int theaterno, int fk_regionno, String theaterlocation, String theatername, String theaterintro,
