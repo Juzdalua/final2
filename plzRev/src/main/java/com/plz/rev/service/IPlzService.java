@@ -10,4 +10,8 @@ public interface IPlzService {
 
 	MemberVO getLoginMember(String userid);
 
+	int isUseuserid(String userid);
+
+	int registerMember(HashMap<String, String> map);	//회원가입
+
 }

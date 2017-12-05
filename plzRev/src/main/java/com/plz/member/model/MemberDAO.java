@@ -33,4 +33,44 @@ public class MemberDAO implements IMemberDAO {
 		MemberVO mvo = sqlsession.selectOne("plz.getLoginMember",userid);
 		return mvo;
 	}
+
+	@Override
+	public int isUseuserid(String email) {
+		int isUseuserid = sqlsession.selectOne("plz.isUseuserid",email);
+		return isUseuserid;
+	}
+
+	@Override
+	public int registerMember(HashMap<String, String> map) {
+		int registerEmail = sqlsession.insert("plz.registerEmail",map);
+		int registerMember = 0;
+		
+		if(registerEmail == 1){
+			registerMember = sqlsession.insert("plz.registerMember",map);
+		}
+		
+		return registerMember*registerEmail;
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
