@@ -28,7 +28,7 @@
         margin-right: 30px;
       }
       
-      .t-style{
+      table,tr,th{
       	border:1px solid #e6e6e6;
       	padding-left:40px;
       	padding-right:40px; 
@@ -37,7 +37,7 @@
       	border-bottom: none;	    	      	
       }
       
-      .t{
+      table{
       	border-left:none;
       	border-right:none;
       }
@@ -46,7 +46,7 @@
       	color: black;      	
       }
       a:hover, a:active{
-      	text-decoration: none !important;
+      	text-decoration: none;
       }
       
       
@@ -230,22 +230,33 @@
 
 <body>
     <div class="navbar-fixed-top" id="fixed-menu" align="center" style="border-bottom:1px solid #e6e6e6; height:50px;">
-      <table class="t-style t">
-      	<tr class="t-style" style="border-left:none; border-right:none;">
-      		<th class="t-style" style="border-left:none;"><a href="index.pz"><img src="<%=request.getContextPath() %>/resources/images/megabox.png"></a></th>
-      		<th class="t-style"><a href="jun_movie.pz">영화</a></th>
-      		<th class="t-style"><a href="booking.pz">예매</a></th>
-      		<th class="t-style"><a href="#">영화관</a></th>
-      		<th class="t-style"><a href="#">스토어</a></th>
-      		<th class="t-style"><a href="#">이벤트</a></th>
-      		<th class="t-style"><a href="#">고객센터</a></th>
+      <table>
+      	<tr style="border-left:none; border-right:none;">
+      		<th style="border-left:none;"><a href="index.pz"><img src="<%=request.getContextPath() %>/resources/images/megabox.png"></a></th>
+      		<th><a href="jun_movie.pz">영화</a></th>
+      		<th><a href="booking.pz">예매</a></th>
+      		<th><a href="#">영화관</a></th>
+      		<th><a href="#">스토어</a></th>
+      		<th><a href="#">이벤트</a></th>
+      		<th><a href="#">고객센터</a></th>
       		<c:if test="${sessionScope.loginuser == null }">      		
+
       			<th class="t-style"><a style="cursor:pointer;" onclick="document.getElementById('id01').style.display='block'">로그인</a></th>
+
+      			<th><a href="<%=request.getContextPath()%>/login.pz">로그인</a></th>
+
       		</c:if>
+
       		<c:if test="${sessionScope.loginuser != null }">    		
       			<th class="t-style"><a href="mypage.pz">MY페이지</a></th>
       			<th class="t-style"><a href="<%=request.getContextPath()%>/logout.pz">로그아웃</a></th>
       		</c:if> 
+
+      		<c:if test="${sessionScope.loginuser != null }">      		
+      			<th><a href="#">MY페이지</a></th>
+      			<th><a href="<%=request.getContextPath()%>/logout.pz">로그아웃</a></th>
+      		</c:if>
+
       	</tr>
       </table>  
       
