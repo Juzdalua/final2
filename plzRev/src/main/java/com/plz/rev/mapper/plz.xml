@@ -30,7 +30,7 @@
 	
 	<select id="getLoginMember" parameterType="String" resultType="com.plz.member.model.MemberVO">
 	
-		select email, passwd, name, birth, post1, post2, addr1, addr2, 
+		select email, passwd, name, birth, 
 	    to_char(joindate, 'yyyy-mm-dd') as joindate, point, status
 		from tbl_email a join tbl_member b
 		on a.email = b.fk_email

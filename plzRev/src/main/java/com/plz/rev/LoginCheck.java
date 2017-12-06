@@ -22,7 +22,7 @@ import com.plz.common.MyUtil;
 @Component
 public class LoginCheck {
 
-	@Pointcut("execution(public * com.plz.*.*Controller.requireLogin_*(..))")
+	@Pointcut("execution(public * com.plz..*.*Controller.requireLogin_*(..))")
 	public void requireLogin(){
 		
 	}
@@ -33,14 +33,14 @@ public class LoginCheck {
 		HttpServletRequest request = (HttpServletRequest)joinPoint.getArgs()[0];
 		HttpSession session = request.getSession();
 		
-		if(session.getAttribute("loginuser") == null){
+		if(session.getAttribute("loginuser")==null){
 			
 			//돌아갈 페이지 설정하기.
 			String url = MyUtil.getCurrentURL(request);
 			session.setAttribute("gobackURL", url);
 			
 			String msg = "로그인먼저";
-			String loc = "/login.action";
+			String loc = "/rev/login.pz";
 			request.setAttribute("msg", msg);
 			request.setAttribute("loc", loc);
 								
