@@ -4,7 +4,6 @@
 <script>
 	
 	$(document).ready(function(){
-		alert("${type}");
 		//에러감추기
 		$(".error").hide();
 		
@@ -128,8 +127,9 @@
 		//회원가입버튼클릭
 		$("#btnOk").click(function(){		
 			
+			
 			if(bool1 && bool2 && bool3 && bool4){
-			   
+				alert(registerFrm.userid2.value);
 				var frm = registerFrm;
 				frm.method = "post";
 				frm.action = "memberRegister.pz";
@@ -153,7 +153,7 @@
 	<div class="form-group">
 	  <label class="col-md-4 control-label" for="userid">이메일</label>  
 	  <div class="col-md-4">
-	  <input id="userid" name="userid" type="text" placeholder="중복검사를 하세요." class="form-control input-md requiredInfo" required>
+	  <input id="userid2" name="userid2" type="text" placeholder="중복검사를 하세요." class="form-control input-md requiredInfo" required>
 	  <button type="button" name="useridBtn" id="useridBtn">중복검사</button>
 	  </div>
 	</div>
@@ -189,7 +189,7 @@
 	
 	<!-- 생년월일 -->
 	<div class="form-group">
-	  <label class="col-md-4 control-label" for="name">생년월일</label>  
+	  <label class="col-md-4 control-label" for="birth">생년월일</label>  
 	  <div class="col-md-4">
 	  <input id="birth" name="birth" type="text" placeholder="주민번호 둘째자리 첫번째 수까지 입력하세요." class="form-control input-md requiredInfo" required>
 	  <span class="help-block error">1111111</span>  

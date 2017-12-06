@@ -21,7 +21,6 @@
 
 	$(document).ready(function(){
 		
-		alert("${type}");
 		
 		$("#userid").keydown(function(event){
 			
@@ -77,7 +76,7 @@
 		var openerfrm = opener.document.registerFrm;
 		
 		//부모창에 중복검사한 아이디를 입력하고 중복검사창을 닫자.
-		openerfrm.userid.value = userid;
+		openerfrm.userid2.value = userid;
 		
 		//다음 입력란인 비밀번호 입력창 활성화하기.
 		openerfrm.pwd.disabled = false;

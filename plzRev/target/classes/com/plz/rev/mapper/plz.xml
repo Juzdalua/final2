@@ -5,63 +5,62 @@
 
 <!-- ==== 루트 엘리먼트 및 네임스페이스 설정하기(이 네임스페이스의 이름은 프로젝트 전체 내에서 반드시 고유해야만 한다.) --> 
 <mapper namespace="plz">
-	
-	<!-- 로그인 sql -->
-	<select id="loginEnd" parameterType="HashMap" resultType="int">
-	
-		select case (select count(*)
-		            from tbl_email a join tbl_member b
+   
+   <!-- 로그인 sql -->
+   <select id="loginEnd" parameterType="HashMap" resultType="int">
+   
+      select case (select count(*)
+                  from tbl_email a join tbl_member b
                 on a.email = b.fk_email
-		            where status = 1
-		            and a.email = #{email} and b.passwd = #{passwd})
-		        when 1 then 1
-		        else (case (select count(*)
-		            from tbl_email a join tbl_member b
+                  where status = 1
+                  and a.email = #{email} and b.passwd = #{passwd})
+              when 1 then 1
+              else (case (select count(*)
+                  from tbl_email a join tbl_member b
                 on a.email = b.fk_email
-		            where status = 1
-		            and a.email = #{email})
-		        when 1 then 0
-		        else -1
-		        end)
-		        end as logincheck
-		from dual
-	
-	</select>
-	
-	<select id="getLoginMember" parameterType="String" resultType="com.plz.member.model.MemberVO">
-	
-		select email, passwd, name, birth, 
-	    to_char(joindate, 'yyyy-mm-dd') as joindate, point, status
-		from tbl_email a join tbl_member b
-		on a.email = b.fk_email
-		where status = 1
-		and a.email = #{email}
-			
-	</select>
-	
-	
-	
-	<select id="isUseuserid" parameterType="String" resultType="int">
-				
-		select count(*) as cnt
-		from tbl_email
-		where email = #{email}
-	</select>
-	
-	
-	
-	<insert id="registerEmail" parameterType="java.util.HashMap">
-    	insert into tbl_email(email, status)
-		values(#{email}, default)
+                  where status = 1
+                  and a.email = #{email})
+              when 1 then 0
+              else -1
+              end)
+              end as logincheck
+      from dual
+   
+   </select>
+   
+   <select id="getLoginMember" parameterType="String" resultType="com.plz.member.model.MemberVO">
+   
+      select email, passwd, name, birth, 
+       to_char(joindate, 'yyyy-mm-dd') as joindate, point, status
+      from tbl_email a join tbl_member b
+      on a.email = b.fk_email
+      where status = 1
+      and a.email = #{email}
+         
+   </select>
+   
+   
+   
+   <select id="isUseuserid" parameterType="String" resultType="int">
+            
+      select count(*) as cnt
+      from tbl_email
+      where email = #{email}
+   </select>
+   
+   
+   
+   <insert id="registerEmail" parameterType="java.util.HashMap">
+       insert into tbl_email(email, status)
+      values(#{email}, default)
     </insert>
     
     <insert id="registerMember" parameterType="java.util.HashMap">
-    	insert into tbl_member(fk_email, passwd, name, birth, joindate, point)
-		values(#{email}, #{passwd}, #{name}, #{birth}, default, default)
+       insert into tbl_member(fk_email, passwd, name, birth, joindate, point)
+      values(#{email}, #{passwd}, #{name}, #{birth}, default, default)
     </insert>
 
 </mapper> 
-
 
 
 

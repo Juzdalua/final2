@@ -14,10 +14,10 @@
       }
       #fixed-menu {
          width: 100%;
-		  background-color: #ffffff;
-		  position: fixed;
-		  top: 0px;
-		  left: 0px;
+        background-color: #ffffff;
+        position: fixed;
+        top: 0px;
+        left: 0px;
       }
       #main-content {
         width: 100%;
@@ -43,10 +43,10 @@
       }
 
       a{
-      	color: black;      	
+         color: black;         
       }
       a:hover, a:active{
-      	text-decoration: none;
+         text-decoration: none;
       }
       
       
@@ -164,119 +164,119 @@
 <script src="<%=request.getContextPath()%>/resources/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
     
 <script>
-	
-	$(document).ready(function(){
-		 
-		 $("#btnLOGIN").click(function() {
-			 func_Login(event);
-		 }); // end of $("#btnLOGIN").click();-----------------------
-		 
-		 $("#passwd-head").keydown(function(event){
-				
-				if(event.keyCode == 13) { // 엔터를 했을 경우
-					func_Login(event);
-				}
-		 }); // end of $("#pwd").keydown();-----------------------	
-		 
-	}); // end of $(document).ready()---------------------------	 
-	
-	
-	function func_Login(event) {
-		
-		if(${sessionScope.loginuser != null}) {
-			 alert("이미 로그인을 하신 상태 입니다 !!");
-			 $("#email-head").val(""); 
-			 $("#passwd-head").val("");
-			 $("#email-head").focus();
-			 event.preventDefault();
-			 return; 
-		 }
-		 
-		 var userid = $("#email-head").val(); 
-		 var pwd = $("#passwd-head").val(); 
-		
-		 if(userid.trim()=="") {
-		 	 alert("아이디를 입력하세요!!");
-			 $("#email-head").val(""); 
-			 $("#email-head").focus();
-			 event.preventDefault();
-			 return;
-		 }
-		
-		 if(pwd.trim()=="") {
-			 alert("비밀번호를 입력하세요!!");
-			 $("#passwd-head").val(""); 
-			 $("#passwd-head").focus();
-			 event.preventDefault();
-			 return;
-		 }
-	
-		 document.loginFrm.action = "/rev/loginEnd.pz";
-		 document.loginFrm.method = "post";
-		 document.loginFrm.submit();
-		 
-	}  // end of function func_Login(event)-----------------------------
+   
+   $(document).ready(function(){
+       
+       $("#btnLOGIN").click(function() {
+          func_Login(event);
+       }); // end of $("#btnLOGIN").click();-----------------------
+       
+       $("#passwd-head").keydown(function(event){
+            
+            if(event.keyCode == 13) { // 엔터를 했을 경우
+               func_Login(event);
+            }
+       }); // end of $("#pwd").keydown();-----------------------   
+       
+   }); // end of $(document).ready()---------------------------    
+   
+   
+   function func_Login(event) {
+      
+      if(${sessionScope.loginuser != null}) {
+          alert("이미 로그인을 하신 상태 입니다 !!");
+          $("#email-head").val(""); 
+          $("#passwd-head").val("");
+          $("#email-head").focus();
+          event.preventDefault();
+          return; 
+       }
+       
+       var userid = $("#email-head").val(); 
+       var pwd = $("#passwd-head").val(); 
+      
+       if(userid.trim()=="") {
+           alert("아이디를 입력하세요!!");
+          $("#email-head").val(""); 
+          $("#email-head").focus();
+          event.preventDefault();
+          return;
+       }
+      
+       if(pwd.trim()=="") {
+          alert("비밀번호를 입력하세요!!");
+          $("#passwd-head").val(""); 
+          $("#passwd-head").focus();
+          event.preventDefault();
+          return;
+       }
+   
+       document.loginFrm.action = "/rev/loginEnd.pz";
+       document.loginFrm.method = "post";
+       document.loginFrm.submit();
+       
+   }  // end of function func_Login(event)-----------------------------
 
-	// Get the modal
-	var modal = document.getElementById('id01');
-	
-	// When the user clicks anywhere outside of the modal, close it
-	window.onclick = function(event) {
-	    if (event.target == modal) {
-	        modal.style.display = "none";
-	    }
-	}
+   // Get the modal
+   var modal = document.getElementById('id01');
+   
+   // When the user clicks anywhere outside of the modal, close it
+   window.onclick = function(event) {
+       if (event.target == modal) {
+           modal.style.display = "none";
+       }
+   }
 </script>
 
 <body>
     <div class="navbar-fixed-top" id="fixed-menu" align="center" style="border-bottom:1px solid #e6e6e6; height:50px;">
       <table class="t-style">
-      	<tr class="t-style" style="border-left:none; border-right:none;">
-      		<th class="t-style" style="border-left:none;"><a href="index.pz"><img src="<%=request.getContextPath() %>/resources/images/megabox.png"></a></th>
-      		<th class="t-style"><a href="jun_movie.pz">영화</a></th>
-      		<th class="t-style"><a href="booking.pz">예매</a></th>
-      		<th class="t-style"><a href="#">영화관</a></th>
-      		<th class="t-style"><a href="#">스토어</a></th>
-      		<th class="t-style"><a href="#">이벤트</a></th>
-      		<th class="t-style"><a href="#">고객센터</a></th>
-      		<c:if test="${sessionScope.loginuser == null }">      		
+         <tr class="t-style" style="border-left:none; border-right:none;">
+            <th class="t-style" style="border-left:none;"><a href="index.pz"><img src="<%=request.getContextPath() %>/resources/images/megabox.png"></a></th>
+            <th class="t-style"><a href="jun_movie.pz">영화</a></th>
+            <th class="t-style"><a href="booking.pz">예매</a></th>
+            <th class="t-style"><a href="#">영화관</a></th>
+            <th class="t-style"><a href="store.pz">스토어</a></th>
+            <th class="t-style"><a href="event.pz">이벤트</a></th>
+            <th class="t-style"><a href="#">고객센터</a></th>
+            <c:if test="${sessionScope.loginuser == null }">            
 
-      			<th class="t-style"><a style="cursor:pointer;" onclick="document.getElementById('id01').style.display='block'">로그인</a></th>
+               <th class="t-style"><a style="cursor:pointer;" onclick="document.getElementById('id01').style.display='block'">로그인</a></th>
 
-      		</c:if>
+            </c:if>
 
-      		<c:if test="${sessionScope.loginuser != null }">    		
-      			<th class="t-style"><a href="mypage.pz">MY페이지</a></th>
-      			<th class="t-style"><a href="<%=request.getContextPath()%>/logout.pz">로그아웃</a></th>
-      		</c:if> 
+            <c:if test="${sessionScope.loginuser != null }">          
+               <th class="t-style"><a href="mypage.pz">MY페이지</a></th>
+               <th class="t-style"><a href="<%=request.getContextPath()%>/logout.pz">로그아웃</a></th>
+            </c:if> 
 
 
-      	</tr>
+         </tr>
       </table>  
       
       
-	<div id="id01" class="modal-head">
-	  
-	  <form class="modal-content-head animate" name="loginFrm">
-	    
-	    <div class="container-head">
-	      <label><b>Email</b></label>
-	      <input class="input-type" type="text" placeholder="Enter Email" name="email-head" id="email-head" required>
-	
-	      <label><b>Password</b></label>
-	      <input class="input-type" type="password" placeholder="Enter Password" name="passwd-head" id="passwd-head" required>
-	        
-	      <button type="submit" id="btnLOGIN">Login</button>
-	      <input type="checkbox" checked="checked"> Remember me
-	    </div>
-	
-	    <div class="container-head" style="background-color:#f1f1f1">
-	      <button class="button-login" type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button><br>
-	      <p><span class="psw">Forgot <a href="#">password?</a></span>&nbsp; or 
-	      &nbsp;<span class="psw">New here? <a href="register.pz">Join Us!</a></span></p>
-	    </div>
-	  </form>
-	</div>
+   <div id="id01" class="modal-head">
+     
+     <form class="modal-content-head animate" name="loginFrm">
+       
+       <div class="container-head">
+         <label><b>Email</b></label>
+         <input class="input-type" type="text" placeholder="Enter Email" name="email-head" id="email-head" required>
+   
+         <label><b>Password</b></label>
+         <input class="input-type" type="password" placeholder="Enter Password" name="passwd-head" id="passwd-head" required>
+           
+         <button type="submit" id="btnLOGIN">Login</button>
+         <input type="checkbox" checked="checked"> Remember me
+       </div>
+   
+       <div class="container-head" style="background-color:#f1f1f1">
+         <button class="button-login" type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button><br>
+         <p><span class="psw">Forgot <a href="#">password?</a></span>&nbsp; or 
+         &nbsp;<span class="psw">New here? <a href="register.pz">Join Us!</a></span></p>
+       </div>
+     </form>
+   </div>
       
       
     </div>

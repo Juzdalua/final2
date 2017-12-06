@@ -25,12 +25,12 @@ public class HomeController {
 	@Autowired
 	private IPlzService service;
 	
-	//메인페이지
+	//메인페이지                      
 	@RequestMapping(value = "/index.pz", method = RequestMethod.GET)
 	public String index() {		
 		
 		return "index.tiles";
-	}
+	}     
 		
 	
 	// ====  로그인 페이지 요청. =====
@@ -92,7 +92,6 @@ public class HomeController {
 		return "index.tiles";
 	}
 	
-	
 	//회원가입 폼 열기
 	@RequestMapping(value="/register.pz",method={RequestMethod.GET})
 	public String register(HttpServletRequest req, HttpServletResponse res){
@@ -134,7 +133,7 @@ public class HomeController {
 	@RequestMapping(value="/memberRegister.pz",method={RequestMethod.POST})
 	public String memberRegister(HttpServletRequest req, HttpServletResponse res){
 		
-		String userid = req.getParameter("userid");
+		String userid = req.getParameter("userid2");
 		String passwd = req.getParameter("pwd");
 		String name = req.getParameter("name");
 		String birth = req.getParameter("birth");
