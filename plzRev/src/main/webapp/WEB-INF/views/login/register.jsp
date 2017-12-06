@@ -7,7 +7,6 @@
 		alert("${type}");
 		//에러감추기
 		$(".error").hide();
-		$("#userid").attr('disabled', true);
 		
 		//아이디 중복검사
 		$("#useridBtn").click(function(){
