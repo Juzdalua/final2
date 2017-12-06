@@ -91,7 +91,37 @@
 		and a.status = 1
 	</select>
 	
+	<!-- coupon_no로 상세정보 불러오기 getCouponDetail -->
+		<resultMap type="java.util.HashMap" id="getCouponDetailMap">
+		<result property="fk_name" 			column="fk_name" 			javaType="String" />
+		<result property="buy_date" 		column="buy_date" 			javaType="String" />
+ 		<result property="unable_date" 		column="unable_date" 		javaType="String" />
+ 		<result property="discount_money" 	column="discount_money" 	javaType="String" />
+ 		<result property="category" 		column="category" 			javaType="String" />
+ 		<result property="status" 			column="status" 			javaType="String" />
+	</resultMap>
+	<select id="getCouponDetail" parameterType="HashMap" resultMap="getCouponDetailMap">
+		select b.fk_name
+		      ,to_char(a.buy_date, 'yyyy-mm-dd') as buy_date
+		      ,to_char(a.unable_date, 'yyyy-mm-dd') as unable_date
+		      ,a.discount_money
+		      ,b.category
+		      ,a.status
+		from tbl_store_history a join tbl_store b
+		on a.fk_store_eventno = b.store_eventno
+		where fk_email = #{email}
+		and coupon_no = #{coupon_no}
+	</select>
+	
 </mapper> 
+
+
+
+
+
+
+
+
 
 
 
