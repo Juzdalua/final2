@@ -10,14 +10,16 @@
 	<select id="loginEnd" parameterType="HashMap" resultType="int">
 	
 		select case (select count(*)
-		            from jsp_member
+		            from tbl_email a join tbl_member b
+                on a.email = b.fk_email
 		            where status = 1
-		            and userid = #{userid} and pwd = #{pwd})
+		            and a.email = #{email} and b.passwd = #{passwd})
 		        when 1 then 1
 		        else (case (select count(*)
-		            from jsp_member
+		            from tbl_email a join tbl_member b
+                on a.email = b.fk_email
 		            where status = 1
-		            and userid = #{userid})
+		            and a.email = #{email})
 		        when 1 then 0
 		        else -1
 		        end)
@@ -28,13 +30,16 @@
 	
 	<select id="getLoginMember" parameterType="String" resultType="com.plz.member.model.MemberVO">
 	
-		select idx, name, userid, pwd, email, hp1, hp2, hp3, post1, post2
-		, addr1, addr2, to_char(joindate,'yyyy-mm-dd') as joindate
-		, status, coin, point, gradelevel
-		from jsp_member
-		where userid = #{userid}
+		select email, passwd, name, birth, 
+	    to_char(joindate, 'yyyy-mm-dd') as joindate, point, status
+		from tbl_email a join tbl_member b
+		on a.email = b.fk_email
+		where status = 1
+		and a.email = #{email}
 			
 	</select>
+
+	
 	
 
 </mapper> 
