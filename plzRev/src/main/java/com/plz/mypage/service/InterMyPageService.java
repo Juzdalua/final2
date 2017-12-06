@@ -1,0 +1,26 @@
+package com.plz.mypage.service;
+
+import java.util.HashMap;
+import java.util.List;
+
+public interface InterMyPageService {
+
+	List<HashMap<String, String>> getCouponList(HashMap<String, Object> map);	//쿠폰리스트 얻어오기
+
+	int getTotalCntCoupon(String email);	//쿠폰리스트 전체갯수 얻어오기
+
+	int getcntMovieCoupon(String email);	//영화관련 쿠폰리스트 갯수 얻어오기
+
+	int getcntStoreCoupon(String email);	//매점 관련 쿠폰 리스트 갯수 얻어오기
+
+	int getSerMovieCoupon(String email);	//사용가능한 영화쿠폰
+
+	int getserStoreCoupon(String email);	//사용가능한 매점쿠폰
+	
+	
+	
+	
+	
+	
+
+}
