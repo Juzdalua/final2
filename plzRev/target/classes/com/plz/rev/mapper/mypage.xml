@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ==== mapper 기본 설정 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- ==== 루트 엘리먼트 및 네임스페이스 설정하기(이 네임스페이스의 이름은 프로젝트 전체 내에서 반드시 고유해야만 한다.) --> 
+<mapper namespace="mypage">
+	
+	<!-- email로 쿠폰리스트 얻어오기 -->
+	<resultMap type="java.util.HashMap" id="getCouponListMap">
+		<result property="rno" 				column="rno" 				javaType="String" />
+ 		<result property="category" 		column="category" 			javaType="String" />
+ 		<result property="fk_name" 			column="fk_name" 			javaType="String" />
+ 		<result property="buy_date" 		column="buy_date" 			javaType="String" />
+ 		<result property="unable_date" 		column="unable_date" 		javaType="String" />
+ 		<result property="discount_money" 	column="discount_money" 	javaType="String" />
+ 		<result property="coupon_no" 		column="coupon_no" 			javaType="String" />
+ 		<result property="fk_email" 		column="fk_email" 			javaType="String" />
+ 		<result property="status" 			column="status" 			javaType="String" />
+	</resultMap>
+	<select id="getCouponList" parameterType="HashMap" resultMap="getCouponListMap">
+		select rno, category, fk_name, buy_date, unable_date, discount_money, coupon_no, fk_email, status
+		from
+		(
+		  select rownum as RNO, V.fk_name, V.category, V.buy_date, V.unable_date, V.discount_money, V.coupon_no, V.fk_email, V.status
+		  from
+		  (
+		    select a.category,a.fk_name, 
+		          to_char(b.buy_date, 'yyyy-mm-dd') as buy_date, 
+		          to_char(b.unable_date, 'yyyy-mm-dd') as unable_date, 
+		          b.discount_money, b.coupon_no, b.fk_email, b.status 
+		    from tbl_store a join tbl_store_history b
+		    on a.store_eventno=b.fk_store_eventno
+		    where fk_email = #{email}
+		    order by buy_date desc
+		  )V
+		)T
+		where rno between #{startrno} and #{endrno}
+		<if test="signal == 2">
+		and category in (1,3)
+		</if>
+		<if test="signal == 3">
+		and category in (2,4)
+		</if>
+		
+	</select>
+	
+	
+	<!-- email로 쿠폰리스트 전체갯수 얻어오기 -->
+	<select id="getTotalCntCoupon" parameterType="String" resultType="int">
+		select count(*) as totalcnt
+		from tbl_store_history
+		where fk_email = #{email}
+	</select>
+	
+	<!-- email로 영화쿠폰 갯수 얻어오기 -->
+	<select id="getcntMovieCoupon" parameterType="String" resultType="int">
+		select count(*) as totalcnt
+		from tbl_store_history a join tbl_store b
+		on a.fk_store_eventno = b.store_eventno
+		where fk_email = #{email}
+		and category in (1,3)
+	</select>
+	
+	<!-- email로 매점쿠폰 갯수 얻어오기 -->
+	<select id="getcntStoreCoupon" parameterType="String" resultType="int">
+		select count(*) as totalcnt
+		from tbl_store_history a join tbl_store b
+		on a.fk_store_eventno = b.store_eventno
+		where fk_email = #{email}
+		and category in (2,4)
+	</select>
+
+	<!-- email로 사용가능한 쿠폰리스트 갯수 얻어오기 -->
+	<select id="getSerMovieCoupon" parameterType="String" resultType="int">
+		select count(*) as totalSerMovie
+		from tbl_store_history a join tbl_store b
+		on a.fk_store_eventno = b.store_eventno
+		where a.fk_email = #{email}
+		and b.category in (1,3)
+		and a.status = 1
+	</select>
+
+	<!-- email로 사용가능한 쿠폰리스트 갯수 얻어오기 -->
+	<select id="getserStoreCoupon" parameterType="String" resultType="int">
+		select count(*) as totalSerStore
+		from tbl_store_history a join tbl_store b
+		on a.fk_store_eventno = b.store_eventno
+		where a.fk_email = #{email}
+		and b.category in (2,4)
+		and a.status = 1
+	</select>
+	
+    <!-- 문의 전체 갯수 카운트하기 -->
+	<select id="getTotalCntQna" parameterType="String" resultType="int">
+		select count(*) as totalcntQna
+		from tbl_servicecenter
+		where fk_email=#{email} and categoryno =2
+	</select>
+	
+	<!-- 문의내역 리스트 얻어오기-->
+	<resultMap type="java.util.HashMap" id="getQnaListMap">
+		<result property="rno" 				column="rno" 				javaType="String" />
+		<result property="serviceno" 				column="serviceno" 				javaType="String" />
+ 		<result property="title" 				column="title" 				javaType="String" />
+ 		<result property="writedate" 				column="writedate" 				javaType="String" />
+ 		<result property="commentcount" 				column="commentcount" 				javaType="String" />
+ 	    <result property="fk_email" 				column="fk_email" 				javaType="String" />
+	</resultMap>
+	
+	<select id="getQnaList" parameterType="HashMap" resultMap="getQnaListMap">
+		select rno, serviceno, title, writedate , commentcount, fk_email
+		from
+		(
+		select  rownum as RNO, V.*
+		from
+		(
+		select serviceno, title, to_char(writedate,'yyyy-mm-dd')as writedate , commentcount, fk_email
+		from tbl_servicecenter
+		where fk_email=#{email} and categoryno =2
+		order by serviceno desc
+		)V
+		)T
+		where rno between #{startrno} and #{endrno}	
+	</select>
+	
+	<!-- 문의내역 디테일 얻어오기-->
+	<resultMap type="java.util.HashMap" id="getQnaDetailMap">
+		<result property="serviceno" 				column="serviceno" 				javaType="String" />
+ 		<result property="title" 				column="title" 				javaType="String" />
+ 		<result property="msg" 				column="msg" 				javaType="String" />
+ 		<result property="writedate" 				column="writedate" 				javaType="String" />
+ 		<result property="commentcount" 				column="commentcount" 				javaType="String" />
+ 	    <result property="theatername" 				column="theatername" 				javaType="String" />
+	</resultMap>
+	<select id="getQnaDetail" parameterType="String" resultMap="getQnaDetailMap">
+		select serviceno, title ,msg, to_char(writedate,'yyyy-mm-dd')as writedate , commentcount,theatername
+		from tbl_servicecenter
+		join tbl_theater
+		on fk_theaterno =theaterno
+		where categoryno=2 and serviceno=#{serviceno}
+	</select>
+
+</mapper> 
+
