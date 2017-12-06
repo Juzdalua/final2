@@ -17,10 +17,15 @@ public interface InterMyPageService {
 
 	int getserStoreCoupon(String email);	//사용가능한 매점쿠폰
 
+
 	HashMap<String, String> getCouponDetail(HashMap<String, String> map);
-	
-	
-	
+
+	List<HashMap<String, String>> getQnaList(HashMap<String, Object> map); //문의 내역 보여주기 
+
+	int getTotalCntQna(String email); //문의 내역 리스트 전체갯수 얻어오기
+
+	HashMap<String, String> getQnaDetail(String serviceno); //문의 정보 상세보기
+
 	
 	
 	

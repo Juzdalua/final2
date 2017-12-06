@@ -113,12 +113,57 @@
 		and coupon_no = #{coupon_no}
 	</select>
 	
+    <!-- 문의 전체 갯수 카운트하기 -->
+	<select id="getTotalCntQna" parameterType="String" resultType="int">
+		select count(*) as totalcntQna
+		from tbl_servicecenter
+		where fk_email=#{email} and categoryno =2
+	</select>
+	
+	<!-- 문의내역 리스트 얻어오기-->
+	<resultMap type="java.util.HashMap" id="getQnaListMap">
+		<result property="rno" 				column="rno" 				javaType="String" />
+		<result property="serviceno" 				column="serviceno" 				javaType="String" />
+ 		<result property="title" 				column="title" 				javaType="String" />
+ 		<result property="writedate" 				column="writedate" 				javaType="String" />
+ 		<result property="commentcount" 				column="commentcount" 				javaType="String" />
+ 	    <result property="fk_email" 				column="fk_email" 				javaType="String" />
+	</resultMap>
+	
+	<select id="getQnaList" parameterType="HashMap" resultMap="getQnaListMap">
+		select rno, serviceno, title, writedate , commentcount, fk_email
+		from
+		(
+		select  rownum as RNO, V.*
+		from
+		(
+		select serviceno, title, to_char(writedate,'yyyy-mm-dd')as writedate , commentcount, fk_email
+		from tbl_servicecenter
+		where fk_email=#{email} and categoryno =2
+		order by serviceno desc
+		)V
+		)T
+		where rno between #{startrno} and #{endrno}	
+	</select>
+	
+	<!-- 문의내역 디테일 얻어오기-->
+	<resultMap type="java.util.HashMap" id="getQnaDetailMap">
+		<result property="serviceno" 				column="serviceno" 				javaType="String" />
+ 		<result property="title" 				column="title" 				javaType="String" />
+ 		<result property="msg" 				column="msg" 				javaType="String" />
+ 		<result property="writedate" 				column="writedate" 				javaType="String" />
+ 		<result property="commentcount" 				column="commentcount" 				javaType="String" />
+ 	    <result property="theatername" 				column="theatername" 				javaType="String" />
+	</resultMap>
+	<select id="getQnaDetail" parameterType="String" resultMap="getQnaDetailMap">
+		select serviceno, title ,msg, to_char(writedate,'yyyy-mm-dd')as writedate , commentcount,theatername
+		from tbl_servicecenter
+		join tbl_theater
+		on fk_theaterno =theaterno
+		where categoryno=2 and serviceno=#{serviceno}
+	</select>
+
 </mapper> 
-
-
-
-
-
 
 
 

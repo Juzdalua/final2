@@ -194,8 +194,8 @@
                          /*  <!-- 1 - 영화 관람권 / 2- 매점 교환권  / 3- 영화 할인권 / 4 - 매점 할인권 / 5 - 일반 이벤트 --> */
                   html += "        <td>"+entry.category_name+"</td>";
                   
-                  html += "        <td><span onClick='"+show(entry.coupon_no)+"'>"+entry.fk_name+"("+entry.coupon_no+")</a></td>";
-                  
+                  html += "        <td><span style='cursor:pointer;' onclick='show("+entry.coupon_no+")'>"+entry.fk_name+"("+entry.coupon_no+")</span></td>";
+
                   html += "        <td>"+entry.buy_date+" ~ "+entry.unable_date+"</td>";
                   html += "        <td>"+entry.status_name+"</td>";
                   html += " </tr> "

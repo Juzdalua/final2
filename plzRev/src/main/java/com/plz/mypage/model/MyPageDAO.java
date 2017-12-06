@@ -55,6 +55,23 @@ public class MyPageDAO implements InterMyPageDAO {
 		return getCouponDetail;
 	}
 	
+	public List<HashMap<String, String>> getQnaList(HashMap<String, Object> map) {
+		List<HashMap<String, String>> qnaList = sqlsession.selectList("mypage.getQnaList", map);
+		return qnaList;
+	}
+
+	@Override
+	public int getTotalCntQna(String email) {
+		int totalcnt = sqlsession.selectOne("mypage.getTotalCntQna", email);
+		return totalcnt;
+	}
+
+	@Override
+	public HashMap<String, String> getQnaDetail(String serviceno) {
+		HashMap<String, String> qnavo = sqlsession.selectOne("mypage.getQnaDetail", serviceno);
+		return qnavo;
+	}
+	
 }
 
 

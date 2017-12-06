@@ -58,6 +58,9 @@ public class MyPageController {
 	   //사용가능한 매점쿠폰
 	   int serStoreCoupon = service.getserStoreCoupon(email);
 	   
+	   //문의 내역 리스트 갯수 얻어오기
+	   int totalcntQna = service.getTotalCntQna(email);
+	   
 
 	   req.setAttribute("totalcntCoupon", totalcntCoupon);
 	   req.setAttribute("cntMovieCoupon", cntMovieCoupon);
@@ -66,6 +69,8 @@ public class MyPageController {
 	   req.setAttribute("SerMovieCoupon", SerMovieCoupon);
 	   req.setAttribute("serStoreCoupon", serStoreCoupon);
 	   
+	   req.setAttribute("totalcntQna", totalcntQna);
+		  
 	   req.setAttribute("email", email);
 	   session.setAttribute("loginuser", loginuser);
 	   req.setAttribute("name", name);
@@ -143,7 +148,6 @@ public class MyPageController {
 			   else if("5".equals(category)){
 				   category_name = "일반 이벤트";
 			   }
-			   System.out.println(category_name);
 			   jsonObj.put("category", (String)getValue.get("category"));
 			   jsonObj.put("category_name", category_name);
 			   jsonObj.put("fk_name", (String)getValue.get("fk_name"));
@@ -203,8 +207,7 @@ public class MyPageController {
 	   return "mypage/checkPoint.tiles";
       
 	}// end of logout(HttpSession session) --------------
-   
-	
+ 	
 	// ===== 내 포인트 사용내역 조회 =====
 	@RequestMapping(value="/couponDetailAjax.pz",method={RequestMethod.GET})
 	public String couponDetailAjax(HttpServletRequest req, HttpServletResponse response, HttpSession session){
@@ -223,20 +226,89 @@ public class MyPageController {
 	   return "couponDetailAjax.notiles";
       
 	}// end of logout(HttpSession session) --------------
+
+	
+	// ===== 마이페이지에서 쿠폰리스트 요청 =====
+	   @RequestMapping(value="/mypage_qna.pz",method={RequestMethod.GET})
+	   public String mypage_qna(HttpServletRequest req, HttpSession session){
+		   	
+		   String email = req.getParameter("email");
+		   String start = req.getParameter("start");
+		   String len = req.getParameter("len");
+
+		   if (start.trim().isEmpty()) {
+			   start = "1";
+		   }
+			
+		   if (len.trim().isEmpty()) {
+				len = "4";
+		   }
+		   int startrno = Integer.parseInt(start);              // 시작 행번호
+		   int endrno = startrno + (Integer.parseInt(len) - 1); // 끝 행번호
+		
+		   // 공식!! endrno = startrno + (보여줄갯수 - 1)
+		   HashMap<String, Object> map = new HashMap<String, Object>();
+			
+		   map.put("email", email);
+		   map.put("startrno", startrno);
+		   map.put("endrno", endrno);
+		 
+		   System.out.println("email: "+email);
+		   System.out.println(startrno +", "+endrno);
+		   //문의 내역 보여주기 
+		   List<HashMap<String, String>> qnaList = service.getQnaList(map);
+			
+		   JSONArray jsonMap = new JSONArray();
+		   HashMap getValue = new HashMap();
+			// rno, title, writedate, commentcount,fk_email,serviceno
+		   
+		   if (qnaList != null) {
+			   for(int i=0; i<qnaList.size(); i++) {
+				   getValue = (HashMap)qnaList.get(i);
+				   
+				   JSONObject jsonObj = new JSONObject();
+				   
+				   jsonObj.put("rno", (String)getValue.get("rno"));
+				   jsonObj.put("serviceno", (String)getValue.get("serviceno"));
+				   jsonObj.put("title", (String)getValue.get("title"));
+				   jsonObj.put("writedate", (String)getValue.get("writedate"));
+				   String status = (String)getValue.get("commentcount");
+				   String status_name = "";
+				   if("1".equals(status)){
+					   status_name = "답변 완료";
+				   }
+				   else if("0".equals(status)){
+					   status_name = "답변 대기중";
+				   }
+				   jsonObj.put("status", (String)getValue.get("status"));
+				   jsonObj.put("status_name", status_name);
+				   jsonObj.put("fk_email", (String)getValue.get("fk_email"));
+				   
+				    jsonMap.put(jsonObj);
+			   }
+		   }
+		   
+		   String str_jsonMap = jsonMap.toString();
+		  
+		   req.setAttribute("str_jsonMap", str_jsonMap);
+		   return "qnaListJSON.notiles";
+	      
+	   }// end of mypage_qna(HttpServletRequest req) ------------------------------------------------
+	   
+		// ===== 마이페이지에서 문의 상세정보 보기 요청 =====
+		@RequestMapping(value="/qnaDetail.pz",method={RequestMethod.GET})
+		 public String qnaDetail(HttpServletRequest req){
+		
+			 String serviceno = req.getParameter("serviceno");
+			 HashMap<String, String> qnavo = service.getQnaDetail(serviceno);  
+			 req.setAttribute("qnavo", qnavo);
+			   
+			 return "qnaDetailAjax.notiles";
+			 
+		 }// end of qnaDetail(HttpServletRequest req) ------------------------------------------------
+
+ 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
