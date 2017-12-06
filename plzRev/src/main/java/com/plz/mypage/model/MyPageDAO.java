@@ -48,6 +48,12 @@ public class MyPageDAO implements InterMyPageDAO {
 		int totalcnt = sqlsession.selectOne("mypage.getserStoreCoupon", email);
 		return totalcnt;
 	}
+
+	@Override
+	public HashMap<String, String> getCouponDetail(HashMap<String, String> map) {
+		HashMap<String, String> getCouponDetail = sqlsession.selectOne("mypage.getCouponDetail", map);
+		return getCouponDetail;
+	}
 	
 }
 

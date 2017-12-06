@@ -16,6 +16,8 @@ public interface InterMyPageService {
 	int getSerMovieCoupon(String email);	//사용가능한 영화쿠폰
 
 	int getserStoreCoupon(String email);	//사용가능한 매점쿠폰
+
+	HashMap<String, String> getCouponDetail(HashMap<String, String> map);
 	
 	
 	

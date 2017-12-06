@@ -49,5 +49,11 @@ public class MyPageService implements InterMyPageService {
 		int totalcnt = dao.getserStoreCoupon(email);
 		return totalcnt;
 	}
+
+	@Override
+	public HashMap<String, String> getCouponDetail(HashMap<String, String> map) {
+		HashMap<String, String> getCouponDetail = dao.getCouponDetail(map);
+		return getCouponDetail;
+	}
 	
 }

@@ -16,5 +16,7 @@ public interface InterMyPageDAO {
 	int getSerMovieCoupon(String email);
 
 	int getserStoreCoupon(String email);
+
+	HashMap<String, String> getCouponDetail(HashMap<String, String> map);
 	
 }

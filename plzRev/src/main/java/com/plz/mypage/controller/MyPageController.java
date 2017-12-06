@@ -200,14 +200,29 @@ public class MyPageController {
 	   String point = req.getParameter("point");
 	   //최근 7일 사이의 포인트 사용내역 조회하기
 	   
-	   
-	   
 	   return "mypage/checkPoint.tiles";
       
 	}// end of logout(HttpSession session) --------------
    
 	
-   
+	// ===== 내 포인트 사용내역 조회 =====
+	@RequestMapping(value="/couponDetailAjax.pz",method={RequestMethod.GET})
+	public String couponDetailAjax(HttpServletRequest req, HttpServletResponse response, HttpSession session){
+	   
+	   String coupon_no = req.getParameter("coupon_no");
+	   String email = req.getParameter("email");
+	   
+	   HashMap<String, String> map = new HashMap<String, String>();
+	   map.put("coupon_no", coupon_no);
+	   map.put("email", email);
+	   
+	   HashMap<String, String> result = service.getCouponDetail(map);
+	  
+	   req.setAttribute("result", result);
+	   
+	   return "couponDetailAjax.notiles";
+      
+	}// end of logout(HttpSession session) --------------
 }
 
 
