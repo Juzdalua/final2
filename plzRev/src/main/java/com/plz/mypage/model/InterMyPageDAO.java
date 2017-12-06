@@ -16,5 +16,11 @@ public interface InterMyPageDAO {
 	int getSerMovieCoupon(String email);
 
 	int getserStoreCoupon(String email);
+
+	List<HashMap<String, String>> getQnaList(HashMap<String, Object> map); // 문의내역 리스트 얻어오기
+
+	int getTotalCntQna(String email);
+
+	HashMap<String, String> getQnaDetail(String serviceno);
 	
 }

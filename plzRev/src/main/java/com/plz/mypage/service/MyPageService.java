@@ -49,5 +49,23 @@ public class MyPageService implements InterMyPageService {
 		int totalcnt = dao.getserStoreCoupon(email);
 		return totalcnt;
 	}
+
+	@Override
+	public List<HashMap<String, String>> getQnaList(HashMap<String, Object> map) {
+		List<HashMap<String, String>> qnaList = dao.getQnaList(map);
+		return qnaList;
+	}
+
+	@Override
+	public int getTotalCntQna(String email) {
+		int totalcnt = dao.getTotalCntQna(email);
+		return totalcnt;
+	}
+
+	@Override
+	public HashMap<String, String> getQnaDetail(String serviceno) {
+		HashMap<String, String> qnavo = dao.getQnaDetail(serviceno);
+		return qnavo;
+	}
 	
 }

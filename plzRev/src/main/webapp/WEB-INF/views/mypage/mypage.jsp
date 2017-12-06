@@ -17,21 +17,55 @@
   
 </head>
 <style>
-	.megabox-color{color:#351F65;}
-	.white-color{background-color:white;}
-	li{ border:1px solid #e6e6e6;
-		background-color:#f1f1f1;}
-	.background{border:5px solid #f1f1f1;}
-	.table{border-top:2px solid #351F65;}
-	.th-color{background-color:#f1f1f1;} 
+   .megabox-color{color:#351F65;}
+   .white-color{background-color:white;}
+   li{ border:1px solid #e6e6e6;
+      background-color:#f1f1f1;}
+   .background{border:5px solid #f1f1f1;}
+   .table{border-top:2px solid #351F65;}
+   .th-color{background-color:#f1f1f1;} 
+   .couponMouse{cursor:pointer;
+            color:#351F65;
+            font-weiht:bold;}
+   .modal-content-detail{  background-color: #fefefe;
+                      margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
+                      border: 1px solid #888;
+                      width: 40%; /* Could be more or less, depending on screen size */
+                      height: 50%;
+                      }
+   .button-detail {
+             background-color: #4CAF50;
+             color: white;
+             padding: 14px;
+             margin: 8px 0;
+             border: none;
+             cursor: pointer;
+             width: 100%;
+         }
+         
+   .button-detail:hover {
+       opacity: 0.8;
+   }
+   @media screen and (max-width: 300px) {
+       
+       .cancelbtn-detail {
+          width: 100%;
+          padding-bottom:300px;
+          margin-bottom:300px;
+       }
+   }   
+	
 </style>
 <script type="text/javascript">
 	
 	$(document).ready(function(){
-		
+		 
 		$("#btnTotalCountCouJSON").hide();
 		$("#btnCountCouJSON").hide(); 
 		$("#btnSignal").hide();
+		$("#btnTotalCountQnaJSON").hide();
+		$("#btnCountQnaJSON").hide(); 
+		
 		
 		// 쿠폰더보기... 버튼을 클릭했을 경우 이벤트 등록하기
 		$("#btnMoreCou").click(function(){
@@ -47,6 +81,7 @@
 			$("#numSignal").text(parseInt('1'));
 			displayCoupon("1","1");
 		});
+		
 		
 		// 영화관련 쿠폰 메뉴를 누른 경우
 		$("#movie_coupon").click(function(){
@@ -68,15 +103,60 @@
 			displayCoupon("1","3");
 		});
 		
+		$("#myqna").click(function(){
+		
+			$("#menu3-display").empty();
+			$("#btnMoreQna").show();
+			$("#countQna").text(parseInt('0')); 
+			$("#totalCountQna").text(parseInt('${totalcntQna}')); 
+			
+			 displayQna("1");
+		});
+		
+		$("#btnMoreQna").click(function(){
+			displayQna($(this).val());
+		});
+		
 	});//end of $(document).ready(function()----------------------
 	
-	function show(coupon_no){
-		alert(coupon_no);
-	    //modal을 띄워준다.  
-	   // $("#couponDetail").modal('show');
-	}		
+	  function show(coupon_no){
+	      //modal을 띄워준다.  
+	       
+	       var form_data = { "coupon_no" : coupon_no 
+	                    ,"email" : $("#email").val()};
+	       
+	      $.ajax({
+	         url: "couponDetailAjax.pz",
+	         type: "get",
+	         data: form_data,
+	         dataType: "HTML",
+	         success: function(data){
+	         
+	            var html = "";
+	            
+	            if (data == null || data.length == 0) {
+	               html += "<td colspan='5' style='text-align:center; text-size:20pt;'>상품정보가 없습니다.</td>"; 
+	               $("#couponDetailContent").empty();
+	               $("#couponDetailContent").html(html);
+	            }
+	            
+	            else {
+	               $("#couponDetailContent").empty();
+	               $("#couponDetailContent").html(data);
+	            }// end of if~else-----------------
+	            
+	                      
+	         },// end of success: function(data)----------
+	         error: function(request, status, error){
+	            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+	         }
+	         
+	      });
+	       
+	      document.getElementById('couponDetail').style.display='block';
+	   };//   function show(coupon_no)----------------------------   
 			
-	var len = 8; // 더보기... 클릭에 보여줄 상품의 갯수 단위 크기
+	var len =8; // 더보기... 클릭에 보여줄 상품의 갯수 단위 크기
 			
 	// category_signal --> 1: 전체 / 2: 영화관련 / 3: 매점관련
 	function displayCoupon(start, signal){
@@ -148,8 +228,103 @@
 			}
 			
 		});
-	}		
+	
+	}
 
+	
+
+	
+	function showQna(serviceno){
+		
+		var modal = document.getElementById('QnAdetail');
+		
+		modal.style.display="block";
+	    
+		window.onclick = function(event) {
+		    if (event.target == modal) {
+		         modal.style.display = "none";
+		      }
+		 }	
+	
+		var form_data = { "serviceno":serviceno };
+
+		$.ajax({
+			url: "qnaDetail.pz",
+			type: "GET",
+			data: form_data,
+			dataType: "html",
+			success: function(data){
+			  $("#qnaDetail").empty();
+			  $("#qnaDetail").append(data);
+			 } 
+		});
+		
+	}
+	
+	
+	
+	function displayQna(start){
+		
+	 var form_data = { "start" : start
+                     ,"len"   : len                
+	                 ,"email" : $("#email").val()
+	               };
+   
+	   $.ajax({
+			url: "mypage_qna.pz",
+			type: "get",
+			data: form_data,
+			dataType: "JSON",
+			success: function(data){
+			
+				var html = "";
+				// 목록이 전체,영화,매점중 어디에 필터링 됐는지 구분하는 문자 넣어주기
+		    	
+				if (data == null || data.length == 0) {
+					html += "<td colspan='5' style='text-align:center; text-size:20pt;'>!문의 내역이 없습니다.</td>"; 
+					
+					$("#btnMoreQna").hide();
+					// 결과를 출력하기
+					$("#menu3-display").html(html);
+				}
+			
+			else {
+				
+				$.each(data, function(entryIndex, entry){
+					html += " <tr> "
+					html += "        <td>"+entry.rno+"</td>";
+					html += "        <td>"+entry.serviceno+"</td>";
+					html += "        <td><span style='cursor:pointer;' onClick='showQna("+entry.serviceno+")'>"+entry.title+"</span></td>";
+					html += "        <td>"+entry.writedate+"</td>";
+					html += "        <td>"+entry.status_name+"</td>";
+					html += " </tr> "
+				}); // end of $.each()-------------
+				
+				// 조회해온 상품의 정보를 출력하기
+		    	$("#menu3-display").append(html);
+		    	 
+		    	// >>>> !!!! 중요 !!!! "더보기..." 버튼의 value 속성에 값을 지정해주기(중요!!!!) <<<<<
+		    	$("#btnMoreQna").val(parseInt(start)+len);
+	    	 
+		    	// 웹브라우저상에 count 출력하기
+		    	$("#countQna").text( parseInt($("#countQna").text()) + data.length );
+		    	
+			// "더보기..." 버튼의 비활성화 처리해야 한다.
+		    	if ( parseInt($("#totalCountQna").text()) == parseInt($("#countQna").text()) ) 
+		    	{ 
+		    		$("#btnMoreQna").hide();
+		    	}
+				
+			}// end of if~else-----------------
+			
+		 				
+		},// end of success: function(data)----------
+		error: function(request, status, error){
+			alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		}
+		
+	});
+		}
 </script>
 <body>
 <input type="hidden" id="email" name="email" value="${email}">
@@ -189,13 +364,11 @@
 <br><br>
 	<div class="container">
              <ul class="nav nav-tabs">
-                <li id="myrev" class="active"><a data-toggle="tab" href="#home" title="예매/구매내역 보기">예매/구매내역</a></li>
+                <li id="myrev" class="active"><a data-toggle="tab" href="#home" title="예매/구매내역 보기">예매 내역</a></li>
                 <li id="mycoupon"><a data-toggle="tab" href="#menu1">나의 쿠폰함</a></li>
                 <li id="myreview"><a data-toggle="tab" href="#menu2">나의 리뷰</a></li>
-                <li id="myhistory"><a data-toggle="tab" href="#menu3">무비 히스토리</a></li>
-                <li id="myevent"><a data-toggle="tab" href="#menu4">나의 이벤트</a></li>
-                <li id="myqna"><a data-toggle="tab" href="#menu5">나의 문의내역</a></li>
-                <li id="myinfo"><a data-toggle="tab" href="#menu6">나의 정보관리</a></li>
+                <li id="myqna"><a data-toggle="tab" href="#menu3">나의 문의내역</a></li>
+                <li id="myinfo"><a data-toggle="tab" href="#menu4">나의 정보관리</a></li>
           </ul>
           <br/><br/>
           
@@ -245,49 +418,70 @@
 				<button type="button" id="btnSignal">Signal : <span id="numSignal">1</span></button>
 			  </div>
 		 	</div>
-				
-			<!-- 쿠폰상세정보 모달 -->
-			  <!-- Modal -->
-			  <div class="modal fade" id="couponDetail" role="dialog">
-			    <div class="modal-dialog">
-			    
-			      <!-- Modal content-->
-			      <div class="modal-content">
-			        <div class="modal-header">
-			          <button type="button" class="close" data-dismiss="modal">&times;</button>
-			          <h4 class="modal-title">Modal Header</h4>
-			        </div>
-			        <div class="modal-body">
-			          <p>Some text in the modal.</p>
-			        </div>
-			        <div class="modal-footer">
-			          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-			        </div>
-			      </div>
-			      
-			    </div>
-			  </div>	
-				
-				    
-		   <!--  
-		    <div id="menu2" class="tab-pane fade">
-		      <h3>Q & A</h3>
-		      <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
-		    </div> -->
+			 <div id="couponDetail" class="modal-head">
+     
+                 <form class="modal-content-detail animate" name="loginFrm">
+                   <h3>쿠폰 상세 정보</h3>
+                   <div class="container-head" id="couponDetailContent">
+                     
+                   </div>
+               
+                   <div class="container-head" style="background-color:#f1f1f1">
+                     <button class="button-detail" type="button" onclick="document.getElementById('couponDetail').style.display='none'" class="cancelbtn-detail">close</button><br>
+                     
+                   </div>
+                 </form>
+             </div>
+		  <!--  
+          <div id="menu2" class="tab-pane fade">
+            <h3>Q & A</h3>
+            <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+          </div> -->
+
+
 		    <div id="menu3" class="tab-pane fade">
-		      <h3>예매 문의 정보</h3><br/>
-		      <h6><span style="font-weight: bold;">예약번호입장</span></h6>
-				- 공연 당일 현장 교부처에서 예약번호 및 본인 확인 후 티켓을 수령하실 수 있습니다.<br/><br/>
-				<h6><span style="font-weight: bold;">예매 취소 안내</span></h6>
-				- 예매 및 취소는 예매/취소는 전날 자정까지만 가능합니다.<br/>
-				- 예매취소는 인터넷 (로그인 후  MyPage) 또는 고객센터 1566-7777 로 가능합니다.<br/>
-				
+		      <br><br>
+		        
+				  <p style="text-align:left !important;">문의 내용을 클릭하시면 상세한 문의 상세정보를 확인하실 수 있습니다.
+			  		
+				  </p>  
+				    
+					<table class="table">
+				    <thead>
+				      <tr>
+				        <th class="th-color">번호</th>
+				        <th class="th-color">문의내역 번호</th>
+				        <th class="th-color">제목</th>
+				        <th class="th-color">글쓴 날짜</th>
+				        <th class="th-color">문의 상태</th>
+				      </tr>
+				    </thead>
+				    <tbody id="menu3-display" >
+		      	
+	      			</tbody>
+	      			</table>
+					
+		      <div style="margin-top: 20px; margin-bottom: 20px;">
+		        <button type="button" class="btn btn-default btn-block" id="btnMoreQna" value=""> 더보기</button>
+				<button type="button" id="btnTotalCountQnaJSON">TotalCount : <span id="totalCountQna"></span></button>
+				<button type="button" id="btnCountQnaJSON">Count : <span id="countQna">0</span></button>
+			  </div>
 		      </div>
 		      
+		     <!-- 문의내역 상세정보 모달 -->
+		   <div id="QnAdetail" class="modal-head">
+              <form class="modal-content-detail animate" name="qnaFrm">
+              <h2>문의 상세정보 </h2>
+		       <div class="container-head" id="qnaDetail">     
+		       </div>
+		        <div class="container-head" style="background-color:#f1f1f1">
+		         <button class="button-detail" type="button" onclick="document.getElementById('QnAdetail').style.display='none'" class="cancelbtn-detail">돌아가기</button><br>
+		       </div>
+		     </form>
+		   </div>
 		      
 		      
-		      
-		    <div id="menu6" class="tab-pane fade" style="text-align:center;">
+		    <div id="menu4" class="tab-pane fade" style="text-align:center;">
 			    <div class="btn-group btn-group-justified">
 				  <a href="editInfo.pz" class="btn btn-default btn-lg">내 정보 수정</a>
 				  <a href="checkPoint.pz" class="btn btn-default btn-lg">포인트내역 조회</a>
