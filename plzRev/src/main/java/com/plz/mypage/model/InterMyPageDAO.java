@@ -24,5 +24,15 @@ public interface InterMyPageDAO {
 	int getTotalCntQna(String email);
 
 	HashMap<String, String> getQnaDetail(String serviceno);
+
+	int getTotalCntPoint(String email);
+
+	int getTotalCntPoint7(String email);
+
+	int getTotalCntPoint30(String email);
+
+	int getTotalCntPoint90(String email);
+
+	java.util.List<HashMap<String, String>> getPointList(HashMap<String, Object> map);
 	
 }

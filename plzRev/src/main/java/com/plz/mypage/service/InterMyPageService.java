@@ -26,6 +26,16 @@ public interface InterMyPageService {
 
 	HashMap<String, String> getQnaDetail(String serviceno); //문의 정보 상세보기
 
+	int getTotalCntPoint(String email);
+
+	int getTotalCntPoint7(String email);
+
+	int getTotalCntPoint30(String email);
+
+	int getTotalCntPoint90(String email);
+
+	java.util.List<HashMap<String, String>> getPointList(HashMap<String, Object> map);
+
 	
 	
 	

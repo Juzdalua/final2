@@ -71,6 +71,36 @@ public class MyPageDAO implements InterMyPageDAO {
 		HashMap<String, String> qnavo = sqlsession.selectOne("mypage.getQnaDetail", serviceno);
 		return qnavo;
 	}
+
+	@Override
+	public int getTotalCntPoint(String email) {
+		int cnt = sqlsession.selectOne("mypage.getTotalCntPoint", email);
+		return cnt;
+	}
+
+	@Override
+	public int getTotalCntPoint7(String email) {
+		int cnt = sqlsession.selectOne("mypage.getCntPointF", email);
+		return cnt;
+	}
+
+	@Override
+	public int getTotalCntPoint30(String email) {
+		int cnt = sqlsession.selectOne("mypage.getCntPointS", email);
+		return cnt;
+	}
+
+	@Override
+	public int getTotalCntPoint90(String email) {
+		int cnt = sqlsession.selectOne("mypage.getCntPointT", email);
+		return cnt;
+	}
+
+	@Override
+	public List<HashMap<String, String>> getPointList(HashMap<String, Object> map) {
+		List<HashMap<String, String>> List = sqlsession.selectList("mypage.getPointList", map);
+		return List;
+	}
 	
 }
 

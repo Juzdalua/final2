@@ -182,19 +182,7 @@ public class MyPageController {
    }// end of mypage_coupon(HttpServletRequest req) ------------------------------------------------
 	
    
-	// ===== 내정보수정 요청전, 비밀번호가 올바른지 확인하기 =====
-	@RequestMapping(value="/editInfo.pz",method={RequestMethod.POST})
-	public String editInfo(HttpServletRequest req, HttpServletResponse response, HttpSession session){
-	   
-	   MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
-	   
-	   String email = loginuser.getEmail();
-
-	   return "mypage/editInfo.tiles";
-      
-	}// end of logout(HttpSession session) --------------
-	
-	
+   
 	
 	// ===== 내 포인트 사용내역 조회 =====
 	@RequestMapping(value="/checkPoint.pz",method={RequestMethod.GET})
@@ -204,11 +192,115 @@ public class MyPageController {
 	   String point = req.getParameter("point");
 	   //최근 7일 사이의 포인트 사용내역 조회하기
 	   
+	   //내 포인트 갯수 갖고가기,(전체, 7일이내, 30일 이내, 90일 이내)
+	   int pointotal = service.getTotalCntPoint(email);
+	   int pointotal7 = service.getTotalCntPoint7(email);
+	   int pointotal30 = service.getTotalCntPoint30(email);
+	   int pointotal90 = service.getTotalCntPoint90(email);
+	   
+	   System.out.println("pointotal "+pointotal);
+	   System.out.println("pointotal7 "+pointotal7);
+	   System.out.println("pointotal30 "+pointotal30);
+	   System.out.println("pointotal90 "+pointotal90);
+	   
+	   req.setAttribute("email", email);
+	   req.setAttribute("point", point);
+	   
+	   req.setAttribute("pointotal", pointotal);
+	   req.setAttribute("pointotal7", pointotal7);
+	   req.setAttribute("pointotal30", pointotal30);
+	   req.setAttribute("pointotal90", pointotal90);
+	   
 	   return "mypage/checkPoint.tiles";
       
 	}// end of logout(HttpSession session) --------------
  	
-	// ===== 내 포인트 사용내역 조회 =====
+	
+	// ===== 내 포인트 사용내역 출력Ajax =====
+	@RequestMapping(value="/mypage_point.pz",method={RequestMethod.GET})
+	public String mypage_point(HttpServletRequest req, HttpServletResponse response, HttpSession session){
+	   
+		String email = req.getParameter("email");
+	   String start = req.getParameter("start");
+	   String len = req.getParameter("len");
+	   String period = req.getParameter("period");
+	   System.out.println("email"+email);
+	   if (start.trim().isEmpty()) {
+			// if (start == null 이 아님!!!!  start 의 값이 "" 이므로
+			// 또는 if ("".equals(start.trim())) 으로 해도 된다.
+		   start = "1";
+	   }
+		
+	   if (len.trim().isEmpty()) {
+			// if (len == null 이 아님!!!!  len 의 값이 "" 이므로
+			// 또는 if ("".equals(len.trim())) 으로 해도 된다.
+		   len = "8";
+	   }
+	   int startrno = Integer.parseInt(start);              // 시작 행번호
+	   int endrno = startrno + (Integer.parseInt(len) - 1); // 끝 행번호
+	   // 공식!! endrno = startrno + (보여줄갯수 - 1)
+	   HashMap<String, Object> map = new HashMap<String, Object>();
+	
+	   map.put("email", email);
+	   map.put("startrno", startrno);
+	   map.put("endrno", endrno);
+	   map.put("period", period);
+	   
+	   //포인트리스트 얻어오기
+	   List<HashMap<String, String>> List = service.getPointList(map);
+		
+	   JSONArray jsonMap = new JSONArray();
+	   HashMap getValue = new HashMap();
+	   //rno, pointno, 
+	      /*to_char(reg_time,'yyyy-mm-dd hh24:mi:ss') as reg_time
+	      , content, type, point*/
+	   
+	   System.out.println("start: "+startrno+", endrno: "+endrno);
+	   
+	   if (List != null) {
+		   for(int i=0; i<List.size(); i++) {
+			   getValue = (HashMap)List.get(i);
+			   JSONObject jsonObj = new JSONObject();
+			   
+			   jsonObj.put("rno", (String)getValue.get("rno"));
+			   jsonObj.put("pointno", (String)getValue.get("pointno"));
+			   jsonObj.put("reg_time", (String)getValue.get("reg_time"));
+			   jsonObj.put("content", (String)getValue.get("content"));
+			   jsonObj.put("type", (String)getValue.get("type"));
+			   jsonObj.put("point", (String)getValue.get("point"));
+			   
+			   /*  <!-- 1 - 적립 / 0- 차감 --> */
+			   String point = (String)getValue.get("point");
+			   String point_name = "";
+			   String type = (String)getValue.get("type");
+			   String type_name = "";
+			   if("1".equals(type)){
+				   point_name = "+"+point;
+				   type_name = "적립";
+			   }
+			   else if("0".equals(type)){
+				   point_name = "-"+point;
+				   type_name = "차감";
+			   }
+			   
+			   jsonObj.put("point_name", point_name);
+			   jsonObj.put("type_name", type_name);
+			   
+			   jsonMap.put(jsonObj);
+		   }
+	   }
+	   
+	   String str_jsonMap = jsonMap.toString();
+	   System.out.println("");
+	   System.out.println(str_jsonMap);
+	   System.out.println("");
+	   req.setAttribute("str_jsonMap", str_jsonMap);
+	   
+	   return "pointListJSON.notiles";
+      
+	}// end of logout(HttpSession session) --------------
+	
+	// ===== 내 쿠폰 상세정보 조회 =====
 	@RequestMapping(value="/couponDetailAjax.pz",method={RequestMethod.GET})
 	public String couponDetailAjax(HttpServletRequest req, HttpServletResponse response, HttpSession session){
 	   
