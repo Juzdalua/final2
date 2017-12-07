@@ -50,6 +50,11 @@ public class MyPageDAO implements InterMyPageDAO {
 	}
 
 	@Override
+	public HashMap<String, String> getCouponDetail(HashMap<String, String> map) {
+		HashMap<String, String> getCouponDetail = sqlsession.selectOne("mypage.getCouponDetail", map);
+		return getCouponDetail;
+	}
+	
 	public List<HashMap<String, String>> getQnaList(HashMap<String, Object> map) {
 		List<HashMap<String, String>> qnaList = sqlsession.selectList("mypage.getQnaList", map);
 		return qnaList;
@@ -65,6 +70,30 @@ public class MyPageDAO implements InterMyPageDAO {
 	public HashMap<String, String> getQnaDetail(String serviceno) {
 		HashMap<String, String> qnavo = sqlsession.selectOne("mypage.getQnaDetail", serviceno);
 		return qnavo;
+	}
+
+	@Override
+	public int getTotalCntRev(String email) {
+		int totalcnt = sqlsession.selectOne("mypage.getTotalCntRev", email);
+		return totalcnt;
+	}
+
+	@Override
+	public List<HashMap<String, String>> getRevList(HashMap<String, Object> map) {
+		List<HashMap<String, String>> reviewList = sqlsession.selectList("mypage.getRevList", map);
+		return reviewList;
+	}
+
+	@Override
+	public int deleteReview(String reviewno) {
+		int n = sqlsession.delete("mypage.deleteReview", reviewno);
+		return n;
+	}
+
+	@Override
+	public int changePasswd(HashMap<String, String> map) {
+		int n = sqlsession.update("mypage.changePasswd", map);
+		return n;
 	}
 	
 }

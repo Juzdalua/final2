@@ -51,6 +51,11 @@ public class MyPageService implements InterMyPageService {
 	}
 
 	@Override
+	public HashMap<String, String> getCouponDetail(HashMap<String, String> map) {
+		HashMap<String, String> getCouponDetail = dao.getCouponDetail(map);
+		return getCouponDetail;
+	}
+	
 	public List<HashMap<String, String>> getQnaList(HashMap<String, Object> map) {
 		List<HashMap<String, String>> qnaList = dao.getQnaList(map);
 		return qnaList;
@@ -66,6 +71,31 @@ public class MyPageService implements InterMyPageService {
 	public HashMap<String, String> getQnaDetail(String serviceno) {
 		HashMap<String, String> qnavo = dao.getQnaDetail(serviceno);
 		return qnavo;
+
+	}
+
+	@Override
+	public int getTotalCntRev(String email) {
+		int totalcnt = dao.getTotalCntRev(email);
+		return totalcnt;
+	}
+
+	@Override
+	public List<HashMap<String, String>> getRevList(HashMap<String, Object> map) {
+		List<HashMap<String, String>> reviewList = dao.getRevList(map);
+		return reviewList;
+	}
+
+	@Override
+	public int deleteReview(String reviewno) {
+		int n = dao.deleteReview(reviewno);
+		return n;
+	}
+
+	@Override
+	public int changePasswd(HashMap<String, String> map) {
+		int n = dao.changePasswd(map);
+		return n;
 	}
 	
 }

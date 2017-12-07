@@ -17,10 +17,20 @@ public interface InterMyPageDAO {
 
 	int getserStoreCoupon(String email);
 
+	HashMap<String, String> getCouponDetail(HashMap<String, String> map);
+
 	List<HashMap<String, String>> getQnaList(HashMap<String, Object> map); // 문의내역 리스트 얻어오기
 
 	int getTotalCntQna(String email);
 
 	HashMap<String, String> getQnaDetail(String serviceno);
+
+	int getTotalCntRev(String email);
+
+	List<HashMap<String, String>> getRevList(HashMap<String, Object> map);
+
+	int deleteReview(String reviewno);
+
+	int changePasswd(HashMap<String, String> map);
 	
 }
