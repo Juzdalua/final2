@@ -17,7 +17,6 @@ public interface InterMyPageService {
 
 	int getserStoreCoupon(String email);	//사용가능한 매점쿠폰
 
-
 	HashMap<String, String> getCouponDetail(HashMap<String, String> map);
 
 	List<HashMap<String, String>> getQnaList(HashMap<String, Object> map); //문의 내역 보여주기 
@@ -34,7 +33,15 @@ public interface InterMyPageService {
 
 	int getTotalCntPoint90(String email);
 
-	java.util.List<HashMap<String, String>> getPointList(HashMap<String, Object> map);
+	List<HashMap<String, String>> getPointList(HashMap<String, Object> map);
+
+	int getTotalCntRev(String email); // 리뷰 리스트 전체갯수 얻어오기
+
+	List<HashMap<String, String>> getRevList(HashMap<String, Object> map); //리뷰 보여주기 
+
+	int deleteReview(String reviewno); // 리뷰 삭제 요청
+
+	int changePasswd(HashMap<String, String> map); // 내 비번 수정
 
 	
 	

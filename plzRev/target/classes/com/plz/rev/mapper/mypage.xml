@@ -237,6 +237,48 @@
 
 
 
+    <!-- 문의 전체 갯수 카운트하기 -->
+	<select id="getTotalCntRev" parameterType="String" resultType="int">
+		select count(*) as cnt
+		from tbl_review
+		where fk_email=#{email}
+	</select>
+	
+	
+	<!-- 문의내역 리스트 얻어오기-->
+	<resultMap type="java.util.HashMap" id="getRevListMap">
+		<result property="rno" 				column="rno" 				javaType="String" />
+		<result property="reviewno" 				column="reviewno" 				javaType="String" />
+ 		<result property="review" 				column="review" 				javaType="String" />
+ 		<result property="writedate" 				column="writedate" 				javaType="String" />
+ 		<result property="moviename" 				column="moviename" 				javaType="String" />
+ 	    <result property="fk_email" 				column="fk_email" 				javaType="String" />
+	</resultMap>
+	
+	<select id="getRevList" parameterType="HashMap" resultMap="getRevListMap">
+		select rno, reviewno, review, writedate, moviename,fk_email
+		from
+		(select rownum as RNO , V.*
+		from
+		(select reviewno, review,to_char(writedate,'yyyy-mm-dd')as writedate,fk_movieno,moviename,fk_email
+		from tbl_review
+		join tbl_movie
+		on fk_movieno=movieno
+		where fk_email=#{email}
+		order by reviewno desc
+		)V
+		)T
+		where rno between #{startrno} and #{endrno}	
+	</select>
+	<!-- 리뷰 삭제  요청 -->
+	<delete id="deleteReview" parameterType="String">
+	  delete tbl_review where reviewno=#{reviewno}
+	</delete>
+	<!-- 내 비번 수정하기  -->
+	<update id="changePasswd" parameterType="HashMap">
+	  update tbl_member set passwd =#{newpasswd} where fk_email=#{email}
+	</update>
+	
 </mapper> 
 
 

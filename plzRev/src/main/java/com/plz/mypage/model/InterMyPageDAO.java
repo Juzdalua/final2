@@ -33,6 +33,15 @@ public interface InterMyPageDAO {
 
 	int getTotalCntPoint90(String email);
 
-	java.util.List<HashMap<String, String>> getPointList(HashMap<String, Object> map);
+	List<HashMap<String, String>> getPointList(HashMap<String, Object> map);
+
+	int getTotalCntRev(String email);
+
+	List<HashMap<String, String>> getRevList(HashMap<String, Object> map);
+
+	int deleteReview(String reviewno);
+
+	int changePasswd(HashMap<String, String> map);
+
 	
 }

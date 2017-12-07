@@ -61,7 +61,9 @@ public class MyPageController {
 	   //문의 내역 리스트 갯수 얻어오기
 	   int totalcntQna = service.getTotalCntQna(email);
 	   
-
+	  //리뷰 리스트 갯수 얻어오기
+	   int totalcntRev = service.getTotalCntRev(email);
+	   
 	   req.setAttribute("totalcntCoupon", totalcntCoupon);
 	   req.setAttribute("cntMovieCoupon", cntMovieCoupon);
 	   req.setAttribute("cntStoreCoupon", cntStoreCoupon);
@@ -70,6 +72,8 @@ public class MyPageController {
 	   req.setAttribute("serStoreCoupon", serStoreCoupon);
 	   
 	   req.setAttribute("totalcntQna", totalcntQna);
+	   
+	   req.setAttribute("totalcntRev", totalcntRev);
 		  
 	   req.setAttribute("email", email);
 	   session.setAttribute("loginuser", loginuser);
@@ -182,16 +186,16 @@ public class MyPageController {
    }// end of mypage_coupon(HttpServletRequest req) ------------------------------------------------
 	
    
+
    
 	
 	// ===== 내 포인트 사용내역 조회 =====
 	@RequestMapping(value="/checkPoint.pz",method={RequestMethod.GET})
 	public String checkPoint(HttpServletRequest req, HttpServletResponse response, HttpSession session){
-	   
-	   String email = req.getParameter("email");
-	   String point = req.getParameter("point");
-	   //최근 7일 사이의 포인트 사용내역 조회하기
-	   
+
+		String email = req.getParameter("email");
+		String point = req.getParameter("point");
+
 	   //내 포인트 갯수 갖고가기,(전체, 7일이내, 30일 이내, 90일 이내)
 	   int pointotal = service.getTotalCntPoint(email);
 	   int pointotal7 = service.getTotalCntPoint7(email);
@@ -214,8 +218,47 @@ public class MyPageController {
 	   return "mypage/checkPoint.tiles";
       
 	}// end of logout(HttpSession session) --------------
- 	
 	
+	// ===== 내정보수정 요청전, 비밀번호가 올바른지 확인하기 =====
+	@RequestMapping(value="/editInfo.pz",method={RequestMethod.GET})
+	public String editInfo(HttpServletRequest req, HttpServletResponse response, HttpSession session){
+	   
+	   MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
+	   
+	   String email = loginuser.getEmail();
+	   String passwd = loginuser.getPasswd();
+	   
+	   req.setAttribute("passwd", passwd);
+	   req.setAttribute("email", email);
+	
+	   return "mypage/editInfo.tiles";
+ 
+
+	}// end of editInfo(HttpSession session) --------------
+	
+	// ===== 내정보수정 요청전, 비밀번호가 올바른지 확인하기 =====
+	@RequestMapping(value="/changePasswd.pz",method={RequestMethod.POST})
+	public String changePasswd(HttpServletRequest req, HttpSession session){
+
+	   MemberVO loginuser = (MemberVO)session.getAttribute("loginuser");
+	   String email = loginuser.getEmail();
+	   String newpasswd = req.getParameter("newpasswd1");
+	  
+	   HashMap<String, String> map = new HashMap<String, String>();
+	   map.put("email", email);
+	   map.put("newpasswd",newpasswd);
+	
+	   int n = service.changePasswd(map);
+	   
+	   req.setAttribute("n", n);
+	   
+	
+	   return "mypage/changePasswdEnd.tiles";
+ 
+
+	}// end of editInfo(HttpSession session) --------------
+	
+
 	// ===== 내 포인트 사용내역 출력Ajax =====
 	@RequestMapping(value="/mypage_point.pz",method={RequestMethod.GET})
 	public String mypage_point(HttpServletRequest req, HttpServletResponse response, HttpSession session){
@@ -320,7 +363,7 @@ public class MyPageController {
 	}// end of logout(HttpSession session) --------------
 
 	
-	// ===== 마이페이지에서 쿠폰리스트 요청 =====
+	// ===== 마이페이지에서 큐앤에이 리스트 요청 =====
 	   @RequestMapping(value="/mypage_qna.pz",method={RequestMethod.GET})
 	   public String mypage_qna(HttpServletRequest req, HttpSession session){
 		   	
@@ -399,7 +442,79 @@ public class MyPageController {
 			 
 		 }// end of qnaDetail(HttpServletRequest req) ------------------------------------------------
 
- 
+		// ===== 마이페이지에서 큐앤에이 리스트 요청 =====
+		   @RequestMapping(value="/mypage_review.pz",method={RequestMethod.GET})
+		   public String mypage_review(HttpServletRequest req, HttpSession session){
+			   	
+			   String email = req.getParameter("email");
+			   String start = req.getParameter("start");
+			   String len = req.getParameter("len");
+
+			   if (start.trim().isEmpty()) {
+				   start = "1";
+			   }
+				
+			   if (len.trim().isEmpty()) {
+					len = "4";
+			   }
+			   int startrno = Integer.parseInt(start);              // 시작 행번호
+			   int endrno = startrno + (Integer.parseInt(len) - 1); // 끝 행번호
+			
+			   // 공식!! endrno = startrno + (보여줄갯수 - 1)
+			   HashMap<String, Object> map = new HashMap<String, Object>();
+				
+			   map.put("email", email);
+			   map.put("startrno", startrno);
+			   map.put("endrno", endrno);
+			 
+			   
+			   List<HashMap<String, String>> reviewList = service.getRevList(map);
+				
+			   JSONArray jsonMap = new JSONArray();
+			   HashMap getValue = new HashMap();
+				// rno, title, writedate, commentcount,fk_email,serviceno
+			   
+			   if (reviewList != null) {
+				   for(int i=0; i<reviewList.size(); i++) {
+					   getValue = (HashMap)reviewList.get(i);
+					   
+					   JSONObject jsonObj = new JSONObject();
+					   
+					   jsonObj.put("rno", (String)getValue.get("rno"));
+					   jsonObj.put("reviewno", (String)getValue.get("reviewno"));
+					   jsonObj.put("moviename", (String)getValue.get("moviename"));
+					   jsonObj.put("review", (String)getValue.get("review"));
+					   jsonObj.put("writedate", (String)getValue.get("writedate"));
+					   jsonObj.put("fk_email", (String)getValue.get("fk_email"));
+					   
+					   jsonMap.put(jsonObj);
+				   }
+			   }
+			   
+			   String str_jsonMap = jsonMap.toString();
+			  
+			   req.setAttribute("str_jsonMap", str_jsonMap);
+			   
+			   return "reviewListJSON.notiles";
+		      
+		   }// end of mypage_review(HttpServletRequest req) ------------------------------------------------
+		   
+		   
+		// ===== 리뷰 삭제 요청 =====
+	   @RequestMapping(value="/deleteReview.pz",method={RequestMethod.GET})
+	   public String deleteReview(HttpServletRequest req){
+			   	
+			   String reviewno = req.getParameter("reviewno");
+			   System.out.println(reviewno);
+			   
+			   int n = service.deleteReview(reviewno);
+			
+			   req.setAttribute("n", n);
+			   return "deleteReview.notiles";
+		      
+	   }// end of deleteReview(HttpServletRequest req) ------------------------------------------------
+	
+	
 }
 
 
