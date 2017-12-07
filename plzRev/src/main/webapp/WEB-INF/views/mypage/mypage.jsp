@@ -520,7 +520,7 @@ li {
 					<br>
 
 					<p style="text-align: left !important;">
-						쿠폰명을 클릭하시면 상세한 쿠폰 정보를 확인하실 수 있습니다.</p>
+						쿠폰명을 클릭하시면 상세한 쿠폰 정보를 확인하실 수 있습니다</p>
 
 					<table class="table">
 						<thead>
