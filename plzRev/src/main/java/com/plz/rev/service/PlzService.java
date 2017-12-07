@@ -30,6 +30,21 @@ public class PlzService implements IPlzService {
 		MemberVO mvo = memberdao.getLoginMember(userid);
 		return mvo;
 	}
+
+	// 아이디 중복을 검사하는 메소드
+	@Override
+	public int isUseuserid(String email) {
+		int isUseuserid = memberdao.isUseuserid(email);
+		return isUseuserid;
+	}
+
+	// 회원가입
+	@Override
+	public int registerMember(HashMap<String, String> map) {
+		int registerMember = memberdao.registerMember(map);
+		return registerMember;
+	}
+	
 	
 	
 }
