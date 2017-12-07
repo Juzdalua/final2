@@ -3,6 +3,7 @@ package com.plz.rev;
 import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +25,12 @@ public class HomeController {
 	@Autowired
 	private IPlzService service;
 	
-	//메인페이지
+	//메인페이지                      
 	@RequestMapping(value = "/index.pz", method = RequestMethod.GET)
 	public String index() {		
 		
 		return "index.tiles";
-	}
+	}     
 		
 	
 	// ====  로그인 페이지 요청. =====
@@ -44,8 +45,20 @@ public class HomeController {
 	@RequestMapping(value="/loginEnd.pz",method={RequestMethod.POST})
 	public String loginEnd(HttpServletRequest req, MemberVO loginuser, HttpSession session){
 		
-		String userid = req.getParameter("email");
-		String pwd = req.getParameter("passwd");
+		System.out.println("loginEnd");
+		String userid = "";
+		String pwd = "";
+		
+		if( req.getParameter("email-head") == null && req.getParameter("userid") != null ){
+			
+			userid = req.getParameter("userid");
+			pwd = req.getParameter("pwd");
+		}
+		else{
+			
+			userid = req.getParameter("email-head");
+			pwd = req.getParameter("passwd-head");
+		}
 		
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("email", userid);
@@ -79,6 +92,73 @@ public class HomeController {
 		return "index.tiles";
 	}
 	
+	//회원가입 폼 열기
+	@RequestMapping(value="/register.pz",method={RequestMethod.GET})
+	public String register(HttpServletRequest req, HttpServletResponse res){
+		
+		return "login/register.tiles";
+	}
 	
+	//회원가입 id중복검사
+	@RequestMapping(value="/idcheck.pz")
+	public String idcheck(HttpServletRequest req, HttpServletResponse res){
+		
+		String method = req.getMethod();
+		
+		//처음이라면 아이디를 입력하는 폼 띄우기
+		if(req.getMethod() == "GET"){
+			System.out.println("1111");
+			
+		}//if
+		
+		//
+		else if(req.getMethod() == "POST"){
+			System.out.println("222222");
+			String email = req.getParameter("userid");
+			//1이면 존재하는 id
+			int isUseuserid = service.isUseuserid(email);
+			//System.out.println(userid+isUseuserid);
+			req.setAttribute("isUseuserid",isUseuserid);
+			req.setAttribute("userid", email);
+			
+		}//else
+		
+		System.out.println("method"+method);
+		req.setAttribute("method", method);
+		
+		return "idcheck.notiles";
+	}
+	
+	//회원가입 폼 열기
+	@RequestMapping(value="/memberRegister.pz",method={RequestMethod.POST})
+	public String memberRegister(HttpServletRequest req, HttpServletResponse res){
+		
+		String userid = req.getParameter("userid2");
+		String passwd = req.getParameter("pwd");
+		String name = req.getParameter("name");
+		String birth = req.getParameter("birth");
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+		
+		map.put("email", userid);
+		map.put("passwd", passwd);
+		map.put("name", name);
+		map.put("birth", birth);
+		
+		int result = service.registerMember(map);
+		
+		String msg = (result==1)?"회원가입 성공!":"회원가입 실패..";
+		String loc = (result==1)?"index.pz":"javascript:history.back();";
+		
+		req.setAttribute("msg", msg);
+		req.setAttribute("loc", loc);
+		
+		return "msg.notiles";
+	}
 	
 }
+
+
+
+
+

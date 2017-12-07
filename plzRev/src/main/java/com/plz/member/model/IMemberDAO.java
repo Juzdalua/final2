@@ -8,4 +8,8 @@ public interface IMemberDAO {
 
 	MemberVO getLoginMember(String userid);
 
+	int isUseuserid(String userid);
+
+	int registerMember(HashMap<String, String> map);
+
 }

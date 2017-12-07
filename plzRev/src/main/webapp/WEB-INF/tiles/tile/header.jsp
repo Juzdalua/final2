@@ -238,7 +238,7 @@
             <th class="t-style"><a href="#">영화관</a></th>
             <th class="t-style"><a href="store.pz">스토어</a></th>
             <th class="t-style"><a href="event.pz">이벤트</a></th>
-            <th class="t-style"><a href="#">고객센터</a></th>
+            <th class="t-style"><a href="list1.pz">고객센터</a></th>
             <c:if test="${sessionScope.loginuser == null }">            
 
                <th class="t-style"><a style="cursor:pointer;" onclick="document.getElementById('id01').style.display='block'">로그인</a></th>

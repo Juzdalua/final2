@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ==== mapper 기본 설정 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- ==== 루트 엘리먼트 및 네임스페이스 설정하기(이 네임스페이스의 이름은 프로젝트 전체 내에서 반드시 고유해야만 한다.) --> 
+<mapper namespace="plz">
+
+    <!-- === 현재 진행중인 이벤트 보여주기 ==== -->
+	<select id="showEvent" resultType="com.plz.jhy_store.model.ImgVO" parameterType="HashMap">
+		select name, img_main, img_detail
+		from
+		(
+		select rownum as RNO, V.name, V.img_main, V.img_detail
+		from
+		(
+		select name, img_main, img_detail
+		from tbl_store_img A
+		join tbl_store B
+		ON A.name = B.fk_name
+		where B.category in(3,4,5) and B.status = #{status}
+		order by B.end_day desc
+		)V
+		)T
+		where T.RNO between #{startrno} and #{endrno} 
+	</select>
+
+    <!-- === 총 진행중인 이벤트 갯수 세기 ==== -->
+	<select id="totalIngCount" resultType="Integer">
+		select count(*) as cnt
+		from
+		(
+		select name, img_main, img_detail
+		from tbl_store_img A
+		join tbl_store B
+		ON A.name = B.fk_name
+		where B.category in(3,4,5) and B.status = 1
+		)V
+	</select>
+	
+    <!-- === 총 종료된 이벤트 갯수 세기 ==== -->
+	<select id="totalEndCount" resultType="Integer">
+		select count(*) as cnt
+		from
+		(
+		select name, img_main, img_detail
+		from tbl_store_img A
+		join tbl_store B
+		ON A.name = B.fk_name
+		where B.category in(3,4,5) and B.status = 0
+		)V
+	</select>
+	
+	<!-- ==== 이벤트 상세 보기 ====  -->
+     <resultMap type="java.util.HashMap" id="getEventDetailMap">
+		<result property="img_main" 	column="img_main" 		javaType="String" />
+		<result property="img_detail" 	column="img_detail" 		javaType="String" />
+		<result property="store_eventno" 	column="store_eventno" 		javaType="String" />
+		<result property="coupon_price" 	column="coupon_price" 		javaType="String" />
+		<result property="start_day" 	column="start_day" 		javaType="String" />
+		<result property="end_day" 	column="end_day" 		javaType="String" />
+		<result property="fk_name" 	column="fk_name" 		javaType="String" />
+		<result property="status" 	column="status" 		javaType="String" />
+	</resultMap>    
+    <select id="eventDetail" resultMap="getEventDetailMap" parameterType="String">
+		select A.img_main, A.img_detail , B.store_eventno, B.coupon_price, to_char(B.start_day,'yyyy-mm-dd') as start_day
+		      ,to_char(B.end_day,'yyyy-mm-dd') as end_day, B.fk_name ,B.status
+	    from tbl_store_img A
+        join tbl_store B
+        ON A.name = B.fk_name
+        where B.fk_name =#{name}
+	</select>
+	
+	<!--  ==== 이미 다운로드 한 기록이 있는지 확인하기 ====  -->
+	<select id="checkDownLoad" parameterType="HashMap" resultType="String">
+		select count(*) as cnt 
+		from tbl_store_history
+		where fk_store_eventno = #{store_eventno} and fk_email =#{email}
+	</select>
+	
+	<!-- ==== 쿠폰 다운로드 하기 ====  -->
+    <insert id="downLoadCoupon" parameterType="HashMap">
+	    insert into tbl_store_history (fk_store_eventno,status,buy_date, unable_date, discount_money, coupon_no,fk_email)
+	    values(#{store_eventno},default,default,default,#{price},#{store_eventno}||seq_tbl_store_history.nextval,#{email})	    
+	</insert>	
+	
+	<!-- ==== 스낵 상품 보여주기 ==== -->
+     <resultMap type="java.util.HashMap" id="getStoreMap">
+     	<result property="name" 	column="name" 		javaType="String" />
+		<result property="img_main" 	column="img_main" 		javaType="String" />
+		<result property="store_eventno" 	column="store_eventno" 		javaType="String" />
+		<result property="coupon_price" 	column="coupon_price" 		javaType="String" />
+		<result property="status" 	column="status" 		javaType="String" />
+		<result property="start_day" 	column="start_day" 		javaType="String" />
+	</resultMap>    
+    <select id="showSnackStore" resultMap="getStoreMap">
+		select name, img_main, store_eventno,coupon_price,status
+		from tbl_store_img A
+		join tbl_store B
+		ON A.name = B.fk_name
+		where B.category =2 and B.status = 1
+	</select>
+	
+	<!-- ==== 영화이용권 보여주기 ==== -->
+    <select id="showMovieStore" resultMap="getStoreMap" >
+		select name, img_main, store_eventno,coupon_price,status
+		from tbl_store_img A
+		join tbl_store B
+		ON A.name = B.fk_name
+		where B.category =1 and B.status = 1
+	</select>
+	<!-- ==== 인기상품보여주기 ==== -->
+	<select id="showBestStore" resultMap="getStoreMap" >
+		select name, img_main, store_eventno,coupon_price,status
+		from
+		(
+		select fk_store_eventno 
+		      ,count(*)as cnt
+		from tbl_store_history 
+		group by rollup(fk_store_eventno)
+		)V
+		join tbl_store B
+		on V.fk_store_eventno = B.store_eventno
+		join tbl_store_img C
+		on C.name = B.fk_name
+		where status =1 and category in(1,2)
+		order by V.cnt desc
+	</select>
+	
+	 <!-- ==== 스토어 상세 페이지 보여주기 ==== -->
+    <select id="storeDetail" resultMap="getStoreMap" parameterType="String">
+		select A.name ,A.img_main, B.store_eventno, B.coupon_price ,B.status ,to_char(B.start_day,'yyyy-mm-dd') as start_day
+	    from tbl_store_img A
+        join tbl_store B
+        ON A.name = B.fk_name
+        where B.fk_name =#{name}
+	</select>
+	
+	<!-- ==== 구매등록하기 ==== -->
+	<insert id="buyEnd" parameterType="HashMap">
+	    insert into tbl_store_history(fk_store_eventno,status,buy_date,unable_date, discount_money, coupon_no,fk_email)
+	    values(#{store_eventno},default,default,default,#{price},#{store_eventno}||seq_tbl_store_history.nextval,#{email})	    
+	</insert>	
+</mapper> 
