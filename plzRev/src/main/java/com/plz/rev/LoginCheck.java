@@ -22,7 +22,7 @@ import com.plz.common.MyUtil;
 @Component
 public class LoginCheck {
 
-	@Pointcut("execution(public * com.plz.*.*Controller.requireLogin_*(..))")
+	@Pointcut("execution(public * com.plz..*.*Controller.requireLogin_*(..))")
 	public void requireLogin(){
 		
 	}
@@ -40,7 +40,7 @@ public class LoginCheck {
 			session.setAttribute("gobackURL", url);
 			
 			String msg = "로그인먼저";
-			String loc = "/login.action";
+			String loc = "/login.pz";
 			request.setAttribute("msg", msg);
 			request.setAttribute("loc", loc);
 								
