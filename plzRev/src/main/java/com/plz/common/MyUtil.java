@@ -254,6 +254,62 @@ public class MyUtil {
 	}// end of String getPageBarWithSearch(int sizePerPage, int blockSize, int totalPage, int currentShowPageNo, String searchType, String searchString, String period, String url)--------------------	
 	
 	
+	
+public static String getPageBarNoticeWithSearch(int sizePerPage, int blockSize, int totalPage, int currentShowPageNo, String title, String search, String url) {
+		
+		String pageBar = "";
+		
+		int loop = 1;
+		
+		int pageNo = ((currentShowPageNo - 1)/blockSize)*blockSize + 1; 
+		// 공식임!!!
+		
+		// currentShowPageNo 가 1~10 일때 pageNo 는   1 
+		// currentShowPageNo 가 11~20 일때 pageNo 는 11
+		// currentShowPageNo 가 21~30 일때 pageNo 는 21
+		
+		String str_pageNo = "";
+		
+		if (pageNo == 1) {
+			str_pageNo = "&nbsp;<<&nbsp; ";
+		}
+		else {
+			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+(pageNo-1)+"&sizePerPage="+sizePerPage+"&title="+title+"&search="+search+"\" >"+"&nbsp;<<&nbsp;</a>&nbsp;"; 
+		}
+		
+		pageBar += str_pageNo;
+		
+		while(!(pageNo > totalPage || loop > blockSize)){
+			
+			if (pageNo == currentShowPageNo)
+				str_pageNo = "&nbsp;<span style=\"color:red; font-size:12pt; font-weight:bold; text-decoration:underline;\">"+pageNo+ "</span>&nbsp;";
+			else
+				str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&title="+title+"&search="+search+"\" >"+pageNo+"</a>" + "&nbsp;";
+			
+			pageBar += str_pageNo; 
+			
+			pageNo++;
+			loop++;
+		}
+		
+		if (pageNo > totalPage) {
+			str_pageNo = "&nbsp; >>";
+		}
+		else {
+			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"&title="+title+"&search="+search+"\">"+"&nbsp;>></a>&nbsp;"; 
+		}
+		
+		pageBar += str_pageNo;	
+		
+		return pageBar;
+		
+	}// end of String getPageBarWithSearch(int sizePerPage, int blockSize, int totalPage, int currentShowPageNo, String searchType, String searchString, String period, String url)--------------------	
+	
+	
+	
+	
+	
+	
 	// **** 돌아갈 URL 페이지의 값을 알기 위해서 먼저 현재 URL 주소를 얻어오는 메소드 **** //
 	public static String getCurrentURL(HttpServletRequest req) {
 		
