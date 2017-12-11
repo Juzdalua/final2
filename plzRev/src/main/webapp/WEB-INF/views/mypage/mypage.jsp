@@ -16,7 +16,7 @@
    src="<%=request.getContextPath()%>/resources/BootStrapStudy/js/bootstrap.min.js"></script>
 <link rel="stylesheet"
    href="<%=request.getContextPath()%>/resources/BootStrapStudy/css/bootstrap.min.css">
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 </head>
 <style>
@@ -81,6 +81,8 @@ li {
       margin-bottom: 300px;
    }
 }
+.none{ display: none }
+.block1{ display: block }
 </style>
 <script type="text/javascript">
    
@@ -94,6 +96,8 @@ li {
       $("#btnTotalCountRevJSON").hide();
       $("#btnCountRevJSON").hide();  
      
+      displayR("1","1");
+      
       // 쿠폰더보기... 버튼을 클릭했을 경우 이벤트 등록하기
       $("#btnMoreCou").click(function(){
          displayCoupon($(this).val(), parseInt($("#numSignal").text()));
@@ -158,6 +162,44 @@ li {
           displayRev($(this).val());
        });
       
+       ///////////////////////////////////////////////////////////
+       
+       // 예매내역더보기... 버튼을 클릭했을 경우 이벤트 등록하기
+       $("#btnMoreR").click(function(){
+          displayR($(this).val(), parseInt($("#numSignal").text()));
+       });
+       
+       // '예매내역'메뉴를 누르면 새로고침된다.
+       $("#myrev").click(function(){
+          $("#displayR").empty();
+          $("#btnMoreR").show();
+          $("#countR").text(parseInt('0')); 
+          $("#totalCountR").text(parseInt('${totalRev}')); 
+          $("#numR").text(parseInt('1'));
+          displayR("1","1");
+       });
+       
+       
+       // 예매 메뉴를 누른 경우
+       $("#revCheck").click(function(){
+          $("#displayR").empty();
+          $("#btnMoreR").show();
+          $("#countR").text(parseInt('0')); 
+          $("#totalCountR").text(parseInt('${totalRev}')); 
+          $("#numR").text(parseInt('1'));
+          displayR("1","1");
+       });
+       
+       // 예매취소 메뉴를 누른 경우
+       $("#revCancel").click(function(){
+          $("#displayR").empty();
+          $("#btnMoreR").show();
+          $("#countR").text(parseInt('0'));
+          $("#totalCountR").text(parseInt('${totalCancel}')); 
+          $("#numR").text(parseInt('2'));
+          displayR("1","2");
+       });
+       
    });//end of $(document).ready(function()----------------------
    
      function show(coupon_no){
@@ -230,6 +272,9 @@ li {
             else {
                
                $.each(data, function(entryIndex, entry){
+            	   
+            	   html += "";
+            	   
                   html += " <tr> "
                   html += "        <td>"+entry.rno+"</td>";
                          /*  <!-- 1 - 영화 관람권 / 2- 매점 교환권  / 3- 영화 할인권 / 4 - 매점 할인권 / 5 - 일반 이벤트 --> */
@@ -440,8 +485,171 @@ li {
         if(bool){
            location.href="deleteReview.pz?reviewno="+reviewno; 
         }
-      }
+    }
+   
+   function myFunction(bookingno){
+	    
+	    var y = "Demo"+bookingno;
+	    
+	    //상세정보가 나와있는 경우 - 1 / down none / up block
+	    if($("#"+bookingno).val() == 1){
+	    	$('#'+y).removeClass("block");
+	    	$('#'+y).addClass("none");
+	    	
+	    	//다운그림을 나타낸다.
+	    	$('#down'+bookingno).addClass("block");
+	    	$('#down'+bookingno).removeClass("none");
+	    	
+	    	//올림그림을 지운다.
+	    	$('#up'+bookingno).removeClass("block");
+	    	$('#up'+bookingno).addClass("none");
+	    	
+	    	$("#"+bookingno).val(2);
+	    }
+	    //상세정보가 들어가있는 경우 - 2/ down block / up none
+	    else{
+	    	$('#'+y).removeClass("none");
+	    	$('#'+y).addClass("block");
+	    	
+	    	//올림그림을 나타낸다..
+	    	$('#up'+bookingno).removeClass("none");
+	    	$('#up'+bookingno).addClass("block");
+	    	
+	    	//다운그림을 지운다.
+	    	$('#down'+bookingno).removeClass("block");
+	    	$('#down'+bookingno).addClass("none");
+	    	
+	    	$("#"+bookingno).val(1);
+	    }
+	    
+   }
+   
+   
+   // signal --> 1: 예약 / 2: 취소 
+   function displayR(start, signal){
+      // display 할 쿠폰정보를 추가해주는 함수(Ajax 로 처리)
       
+       var form_data = { "start" : start
+                        ,"len"   : len                
+                       ,"email" : $("#email").val()
+                       ,"signal" : signal
+                       };
+       
+      $.ajax({
+         url: "mypage_booking.pz",
+         type: "get",
+         data: form_data,
+         dataType: "JSON",
+         success: function(data){
+         
+            var html = "";
+             
+            if (data == null || data.length == 0) {
+               html += "<td colspan='5' style='text-align:center; text-size:20pt;'>!예매 내역이 없습니다.</td>"; 
+               
+               $("#btnMoreR").hide();
+               // 결과를 출력하기
+               $("#displayR").html(html);
+            }
+            
+            else {
+            	/* rno, bookingno, totalprice, general, student, screenname, screendate, 
+                starttime, endtime, fk_theaterno, fk_movieno, theatername, moviename, medianame, status, seat */
+               $.each(data, function(entryIndex, entry){
+            	   /* alert("Demo"+entry.bookingno);
+            	    */
+            	    html += "<div class='row' style='border:0px solid lightgrey;  width:100%; padding: 15px;'>";					
+					
+            	    html+="<div class='col-sm-2' style='border:0px solid red; text-align:center; display:inline;'> ";
+            	    html += "<img class=\"w3-hover-opacity\" height=\"110px;\" src='resources/images/jun"+entry.medianame+"'/>";
+            	    html+="</div>";
+            	    
+            	    html+="<div class='col-sm-8' style='border:0px solid blue; text-align:left; height: 100%; width:70%; padding: 15px;display:inline;'> ";
+             	   html += " <div class='col-sm-3' style='text-align:left;font-weight:bold;'> ";
+             	   html += "예매번호";
+             	   html += "</div>";
+             	   html += " <div class='col-sm-5' style='text-align:left;'> ";
+             	   html += "<span>"+entry.bookingno+"</span>";
+             	   html += "</div><br>";
+             	   
+             	   html += " <div class='col-sm-3' style='text-align:left;font-weight:bold;'> ";
+             	   html += "사용상태";
+             	   html += "</div>";
+             	   html += " <div class='col-sm-5' style='text-align:left'> ";
+             	   html += "<span>"+entry.status_name+"</span>";
+             	   html += "</div><br>";
+             	   
+             	   html += " <div class='col-sm-3' style='text-align:left;font-weight:bold;'> ";
+             	   html += "예매내역";
+             	   html += "</div>";
+             	   html += " <div class='col-sm-5' style='text-align:left'> ";
+             	   html += "<span>"+entry.moviename+"</span>";
+             	   html += "</div><br>";
+             	   
+             	   html += " <div class='col-sm-3' style='text-align:left;font-weight:bold;'> ";
+             	   html += "총결제금액";
+             	   html += "</div>";
+             	   html += " <div class='col-sm-5' style='text-align:left'> ";
+             	   html += "<span>"+entry.totalprice+"원</span>";
+             	   html += "</div><br>";
+ 			  	   html+= "</div>";
+ 			  		
+ 			  	   html += "<div class='col-sm-1' style='border:0px solid green; display:inline;'>";
+ 			  	   html += "<i id='down" +entry.bookingno+ "' class='fa fa-angle-double-down block' style='cursor:pointer;font-size:48px;color:black;margin-top:20px;' onClick='myFunction("+entry.bookingno+")'></i>";
+ 			  	   html += "<i id='up" +entry.bookingno+ "' class='fa fa-angle-double-up none' style='cursor:pointer;font-size:48px;color:black;margin-top:20px;' onClick='myFunction("+entry.bookingno+")'></i>";
+ 			  	   html += "</div>";
+ 			  	   
+             	   html += "<div id='Demo" +entry.bookingno+ "' class='col-sm-12 none' style='border:0px solid grey; background-color:#f1f1f1; margin-top:20px;'>";
+ 			       html += "<p style='height: 50%; padding: 15px; text-align:left;'>&nbsp;&nbsp;";
+ 			       html += " 	<span style='font-weight:bold;'>"+entry.moviename+"</span><br>";
+ 			       html += "	<span>&nbsp;&nbsp;<span style='color:grey;'>상영일</span>&nbsp;"+entry.screendate+"</span>&nbsp;&nbsp;|&nbsp;<span><span style='color:grey;'>&nbsp;&nbsp;상영시간</span>&nbsp;"+entry.starttime+"~"+entry.endtime+"</span>&nbsp;&nbsp;|&nbsp;&nbsp;<span><span style='color:grey;'>상영관</span>&nbsp;"+entry.theatername+", "+entry.screenname+"관</span><br>";
+ 			       html += " 	<span>&nbsp;&nbsp;<span style='color:grey;'>관람인원</span>&nbsp;"+entry.people+"</span>&nbsp;&nbsp;|&nbsp;<span>&nbsp;&nbsp;<span style='color:grey;'>좌석</span>&nbsp;"+entry.seat+"</span>";
+ 			       html += " 	<span>&nbsp;&nbsp;|&nbsp;&nbsp;<span style='color:grey;'>주문금액</span>&nbsp;"+entry.totalprice+"원</span>";
+ 			       
+ 			       html += "	<button type='button' class='none' id='"+entry.bookingno+"' value='2'>signal</button>";
+ 			       html += "</p>";
+ 			       html += "	<button type='button' id='cancel"+entry.bookingno+"'>취소</button>";
+ 			  	   html += "</div>";
+ 			  	   
+            	    html+="</div>";
+            	   
+			  	 
+            	 html+="<hr><br>";
+            	 
+            	 
+               }); // end of $.each()-------------
+               
+               // 조회해온 상품의 정보를 출력하기
+                $("#displayR").append(html);
+                 
+                // >>>> !!!! 중요 !!!! "더보기..." 버튼의 value 속성에 값을 지정해주기(중요!!!!) <<<<<
+                $("#btnMoreR").val(parseInt(start)+len);
+                 
+                // 웹브라우저상에 count 출력하기
+                $("#countR").text( parseInt($("#countR").text()) + data.length );
+                
+               //$("#numSignal").text(parseInt(category_signal));
+                
+                // totalCountCoupon 와 countCoupon 의 값이 일치하는 경우에는 
+                // "더보기..." 버튼의 비활성화 처리해야 한다.
+                if ( parseInt($("#totalCountR").text()) == parseInt($("#countR").text()) ) 
+                { 
+                   $("#btnMoreR").hide();
+                }
+               
+            }// end of if~else-----------------
+            
+                      
+         },// end of success: function(data)----------
+         error: function(request, status, error){
+            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+         }
+         
+      });
+   
+   }
+    
+   
   
 </script>
 <body>
@@ -504,11 +712,37 @@ li {
          <br />
          <br />
 
+
+
          <div class="tab-content">
             <div id="home" class="tab-pane fade in active">
-               <h3 style="font-size: 20pt;">요약</h3>
-
+               <div style="text-align: left; height: 50px; margin-top: -2%;">
+                  <a id="revCheck" style="cursor: pointer;">예매/구매내역</a>&nbsp;|&nbsp;
+                  <a id="revCancel" style="cursor: pointer;">취소내역</a>
+               </div>
+               <br>
+               <br>
+               <hr>
+                <div class="container">
+					<div class="container" id="displayR" >
+						
+					</div>
+				</div>
+				<div style="margin-top: 20px; margin-bottom: 20px;">
+                  <button type="button" class="btn btn-default btn-block" id="btnMoreR" value="">더보기</button>
+                  <button type="button" id="btnTotalCountRJSON" class="none">
+                     TotalCount : <span id="totalCountR">${totalRev}</span>
+                  </button>
+                  <button type="button" id="btnCountRJSON" class="none">
+                     Count : <span id="countR">0</span>
+                  </button>
+                  <button type="button" id="btnR" class="none">
+                     Signal : <span id="numR">1</span>
+                  </button>
+               </div>
             </div>
+
+
 
 
             <div id="menu1" class="tab-pane fade">
@@ -538,8 +772,7 @@ li {
                </table>
 
                <div style="margin-top: 20px; margin-bottom: 20px;">
-                  <button type="button" class="btn btn-default btn-block"
-                     id="btnMoreCou" value="">더보기</button>
+                  <button type="button" class="btn btn-default btn-block" id="btnMoreCou" value="">더보기</button>
                   <button type="button" id="btnTotalCountCouJSON">
                      TotalCount : <span id="totalCountCoupon"></span>
                   </button>

@@ -125,6 +125,24 @@ public class MyPageDAO implements InterMyPageDAO {
 		int n = sqlsession.update("mypage.changePasswd", map);
 		return n;
 	}
+
+	@Override
+	public int getTotalRev(String email) {
+		int totalcnt = sqlsession.selectOne("mypage.getTotalRev", email);
+		return totalcnt;
+	}
+
+	@Override
+	public int gettotalCancel(String email) {
+		int totalcnt = sqlsession.selectOne("mypage.gettotalCancel", email);
+		return totalcnt;
+	}
+
+	@Override
+	public List<HashMap<String, String>> getBookingList(HashMap<String, Object> map) {
+		List<HashMap<String, String>> List = sqlsession.selectList("mypage.getBookingList", map);
+		return List;
+	}
 	
 }
 

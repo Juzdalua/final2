@@ -1,7 +1,5 @@
 package com.plz.service.model;
 
-import com.plz.khk.model.TheaterVO;
-
 public class ServiceCenterVO {
 
 	private int serviceno;            
@@ -16,14 +14,12 @@ public class ServiceCenterVO {
 	private int important;         			  /* 공지여부 */
     private int fk_theaterno;             // 극장번호 
 	
-    private TheaterVO theatervo;
-    
     
     public ServiceCenterVO(){ }
 
 
 	public ServiceCenterVO(int serviceno, String categoryno, String title, String msg, String writedate, int cnt,
-			int status, int commentCount, String fk_email, int important, int fk_theaterno, TheaterVO theatervo) {
+			int status, int commentCount, String fk_email, int important, int fk_theaterno) {
 		super();
 		this.serviceno = serviceno;
 		this.categoryno = categoryno;
@@ -36,7 +32,7 @@ public class ServiceCenterVO {
 		this.fk_email = fk_email;
 		this.important = important;
 		this.fk_theaterno = fk_theaterno;
-		this.theatervo = theatervo;
+		
 	}
 
 
@@ -149,16 +145,5 @@ public class ServiceCenterVO {
 		this.fk_theaterno = fk_theaterno;
 	}
 
-
-	public TheaterVO getTheatervo() {
-		return theatervo;
-	}
-
-
-	public void setTheatervo(TheaterVO theatervo) {
-		this.theatervo = theatervo;
-	}
-    
-    
     
 }

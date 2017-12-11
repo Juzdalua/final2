@@ -43,6 +43,12 @@ public interface InterMyPageService {
 
 	int changePasswd(HashMap<String, String> map); // 내 비번 수정
 
+	int getTotalRev(String email);
+
+	int gettotalCancel(String email);
+
+	List<HashMap<String, String>> getBookingList(HashMap<String, Object> map);
+
 	
 	
 	

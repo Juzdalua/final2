@@ -43,5 +43,11 @@ public interface InterMyPageDAO {
 
 	int changePasswd(HashMap<String, String> map);
 
+	int getTotalRev(String email);
+
+	int gettotalCancel(String email);
+
+	java.util.List<HashMap<String, String>> getBookingList(HashMap<String, Object> map);
+
 	
 }

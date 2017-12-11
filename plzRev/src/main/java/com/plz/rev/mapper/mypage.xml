@@ -279,6 +279,89 @@
 	  update tbl_member set passwd =#{newpasswd} where fk_email=#{email}
 	</update>
 	
+	
+	<!-- 예매내역 전체갯수 얻어오기 -->
+	<select id="getTotalRev" parameterType="String" resultType="int">
+		select count(*)
+		from tbl_booking
+		where fk_email=#{email}
+		and status=1
+	</select>
+	
+	<!-- 취소예매내역 전체갯수 얻어오기 -->
+	<select id="gettotalCancel" parameterType="String" resultType="int">
+		select count(*)
+		from tbl_booking
+		where fk_email=#{email}
+		and status=0
+	</select>
+	
+	
+	<!-- 예매내역 리스트 얻어오기-->
+	<resultMap type="java.util.HashMap" id="getBookingListMap">
+		<result property="rno" 				column="rno" 				javaType="String" />
+		<result property="bookingno" 		column="bookingno" 			javaType="String" />
+		<result property="totalprice" 		column="totalprice" 		javaType="String" />
+ 		<result property="general" 			column="general" 			javaType="String" />
+ 		<result property="student" 			column="student" 			javaType="String" />
+ 		<result property="screenname" 		column="screenname" 		javaType="String" />
+ 	    <result property="screendate" 		column="screendate" 		javaType="String" />
+ 	    <result property="starttime" 		column="starttime" 			javaType="String" />
+ 	    <result property="endtime" 			column="endtime" 			javaType="String" />
+ 	    <result property="fk_theaterno" 	column="fk_theaterno" 		javaType="String" />
+ 	    <result property="fk_movieno" 		column="fk_movieno" 		javaType="String" />
+ 	    <result property="theatername" 		column="theatername" 		javaType="String" />
+ 	    <result property="moviename" 		column="moviename" 			javaType="String" />
+ 	    <result property="medianame" 		column="medianame" 			javaType="String" />
+ 	    <result property="status" 			column="status" 			javaType="String" />
+ 	    <result property="seat" 			column="seat" 				javaType="String" />
+	</resultMap>
+	
+	<select id="getBookingList" parameterType="HashMap" resultMap="getBookingListMap">
+		select rno, bookingno, totalprice, general, student, screenname, screendate, 
+		        starttime, endtime, fk_theaterno, fk_movieno, theatername, moviename, medianame, status, seat
+		from
+		(
+		  select rownum as rno, T.*
+		  from
+		  (
+		    select bookingno, totalprice, general, student, screenname, screendate, 
+		          starttime, endtime, fk_theaterno, fk_movieno, theatername, moviename, medianame, status,
+		          SUBSTR(XMLAgg(XMLELEMENT(x, ',', seat) ORDER BY seat).Extract('//text()'), 2) as seat
+		    from
+		    (
+		      select a.bookingno, a.totalprice, a.general, a.student, b.screenname, b.screendate, 
+		          to_char(b.starttime, 'hh24:mi') as starttime, to_char(b.endtime, 'hh24:mi') as endtime, 
+		          fk_theaterno, b.fk_movieno, c.theatername, d.moviename, e.seat, f.medianame, a.status
+		      from tbl_booking a 
+		      join tbl_screen b
+		      on a.fk_screenno = b.screenno
+		      join tbl_theater c
+		      on b.fk_theaterno = c.theaterno
+		      join tbl_movie d
+		      on b.fk_movieno = d.movieno
+		      join tbl_seat e
+		      on a.bookingno = e.fk_bookingno
+		      join tbl_media f
+		      on d.movieno = f.fk_movieno
+		      where fk_email=#{email}
+		      and f.medianame like '%main%'
+		      order by bookingno desc
+		    )V 
+		    group by (bookingno, totalprice, general, student, screenname, screendate, 
+		          starttime, endtime, fk_theaterno, fk_movieno, theatername, moviename, medianame, status)
+		  )T  
+		)M
+		where rno between #{startrno} and #{endrno}	
+		<if test="signal == 1">
+			and status = 1
+		</if>
+		<if test="signal == 2">
+			and status = 0
+		</if>
+	</select>
+	
+	
 </mapper> 
 
 

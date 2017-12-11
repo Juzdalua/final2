@@ -127,5 +127,23 @@ public class MyPageService implements InterMyPageService {
 		int n = dao.changePasswd(map);
 		return n;
 	}
+
+	@Override
+	public int getTotalRev(String email) {
+		int totalcnt = dao.getTotalRev(email);
+		return totalcnt;
+	}
+
+	@Override
+	public int gettotalCancel(String email) {
+		int totalcnt = dao.gettotalCancel(email);
+		return totalcnt;
+	}
+
+	@Override
+	public List<HashMap<String, String>> getBookingList(HashMap<String, Object> map) {
+		List<HashMap<String, String>> List = dao.getBookingList(map);
+		return List;
+	}
 	
 }
