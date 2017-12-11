@@ -1,7 +1,5 @@
 package com.plz.service.model;
 
-import com.plz.khk.model.TheaterVO;
-
 public class ServiceCenterVO {
 
 	private int serviceno;            
@@ -16,9 +14,7 @@ public class ServiceCenterVO {
 	private int important;         			  /* 공지여부 */
     private int fk_theaterno;             // 극장번호 
 	
-    
     public ServiceCenterVO(){ }
-
 
 	public int getServiceno() {
 		return serviceno;

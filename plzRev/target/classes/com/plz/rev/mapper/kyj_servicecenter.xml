@@ -271,6 +271,31 @@
 	</select>
 	
 	
+   <resultMap type="java.util.HashMap" id="noticeDetail">
+      <result property="serviceno"    column="serviceno"           javaType="String" />
+      <result property="title"    column="title"           javaType="String" />
+      <result property="msg"    column="msg"           javaType="String" />
+      <result property="writedate"    column="writedate"           javaType="String" />
+      <result property="cnt"    column="cnt"           javaType="String" />
+      <result property="theatername"    column="theatername"           javaType="String" />
+   </resultMap>
+   
+   <!-- 공지사항 상세보기  -->
+    <select id="showNoticeDetail" parameterType="String" resultMap="noticeDetail">
+       select serviceno, title, msg, to_char(writedate,'yyyy-mm-dd')as writedate, cnt, theatername
+      from tbl_serviceCenter 
+      join tbl_theater
+      on fk_theaterno = theaterno
+      where serviceno=#{serviceno} and categoryno=1
+    </select>
+    <update id="setAddReadCount">
+       update tbl_serviceCenter set cnt = cnt + 1 where serviceno=#{serviceno} and categoryno=1 
+   </update>
+	
+	
+	
+	
+	
 	<!-- 할인 카드  -->
 	
 	<resultMap type="java.util.HashMap" id="getcardList">

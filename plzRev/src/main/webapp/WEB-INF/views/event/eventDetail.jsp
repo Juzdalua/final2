@@ -30,7 +30,6 @@
   <div class="container" style="border: 0px solid navy;">  
  <hr style="width: 70%;">
  <img src="<%= request.getContextPath() %>/resources/jhy_images/${detail.img_detail}" alt="Image"></a><br/><br/>
- <span style="text-align: center; font-size:20pt; font-weight: bold;"> ** 이미 종료된 이벤트 입니다. ** </span><br/><br/>
  <br/>
 </div>
 </c:if>

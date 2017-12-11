@@ -29,14 +29,16 @@ public interface IServiceDAO {
 
 	List<HashMap<String, String>> movieList(String search);
 
+
 	String selectTheaterno(String movie);
 
 	int getQnAInsert(HashMap<String, String> map);
 
 	List<HashMap<String, String>> faqListSearch(HashMap<String, String> map);
 
+	HashMap<String, String> showNoticeDetail(String serviceno);
 
-
+	void setAddReadCount(String serviceno);
 
 
 

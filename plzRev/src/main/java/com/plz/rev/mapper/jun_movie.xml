@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ==== mapper 기본 설정 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- ==== 루트 엘리먼트 및 네임스페이스 설정하기(이 네임스페이스의 이름은 프로젝트 전체 내에서 반드시 고유해야만 한다.) --> 
+<mapper namespace="jun_movie">
+	
+	
+	<resultMap type="HashMap" id="getAllMoviesMap">
+		<result property="movieno" 			column="movieno" 		javaType="String"/>
+		<result property="moviename" 		column="moviename" 		javaType="String"/>
+		<result property="releasedate" 		column="releasedate" 	javaType="String"/>
+		<result property="gradesum" 		column="gradesum" 		javaType="String"/>
+		<result property="ratingname" 		column="ratingname" 	javaType="String"/>
+		<result property="runtime" 			column="runtime" 		javaType="String"/>
+		<result property="director" 		column="director" 		javaType="String"/>
+		<result property="actors" 			column="actors" 		javaType="String"/>
+		<result property="summary" 			column="summary" 		javaType="String"/>
+		<result property="genrename" 		column="genrename" 		javaType="String"/>
+		<result property="countryname" 		column="countryname" 	javaType="String"/>
+		<result property="companyname" 		column="companyname" 	javaType="String"/>
+		<result property="movietypename" 	column="movietypename" 	javaType="String"/>
+		<result property="ratingno" 		column="fk_ratingno" 	javaType="String"/>
+	</resultMap>
+	<select id="getAllMovies" resultMap="getAllMoviesMap" >
+		select M.movieno, M.moviename
+		, to_char(M.releasedate,'yyyy-mm-dd') as releasedate
+		, to_char(M.gradesum, '90.0') as gradesum, R.ratingname
+		, MD.runtime, MD.director, MD.actors, MD.summary
+		, G.genrename, CT.countryname
+		, CP.companyname, MT.movietypename
+		, M.fk_ratingno
+		from tbl_movie M join tbl_moviedetail MD
+		on M.movieno = MD.fk_movieno
+		join tbl_rating R
+		on M.fk_ratingno = R.ratingno
+		join tbl_genre G
+		on MD.fk_genreno = G.genreno
+		join tbl_country CT
+		on MD.fk_countryno = CT.countryno
+		join tbl_company CP
+		on MD.fk_companyno = CP.companyno
+		join tbl_movietype MT
+		on MD.fk_movietypeno = MT.movietypeno
+	</select>
+	
+	
+	<select id="getAllMainimages" resultType="com.plz.jun.movie.model.MediaVO">
+		select mediano, mediatype, fk_movieno, medianame
+		from tbl_media
+		where medianame like '%main%'
+		and mediatype = 0
+	</select>
+
+</mapper> 

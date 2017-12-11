@@ -107,7 +107,16 @@ public class ServiceDAO implements IServiceDAO {
 		return list;
 	}
 
+	@Override
+	public HashMap<String, String> showNoticeDetail(String serviceno) {
+		HashMap<String, String> noticevo = sqlsession.selectOne("plz.showNoticeDetail",serviceno);
+		return noticevo;
+	}
 
+	@Override
+	public void setAddReadCount(String serviceno) {
+		sqlsession.update("plz.setAddReadCount",serviceno);
+	}
 
 
 

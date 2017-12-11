@@ -86,7 +86,8 @@
 		    	 
 		    	// "더보기..." 버튼의 value 속성에 값을 지정해주기
 		    	$("#btnMoreNEW").val(parseInt(start)+len);	 
-		    
+		    	$("#btnMoreEND").val(parseInt(start)+len);	 
+			    
 		    	$("#countNEW").text( parseInt($("#countNEW").text()) + data.length );
 		    	
 		    	// "더보기..." 버튼의 비활성화 처리

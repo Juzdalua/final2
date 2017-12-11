@@ -5,21 +5,25 @@
 
 <script>
 
-	<c:if test="${n==1 && gobackURL == null}">		
-		location.href = "<%=request.getContextPath()%>/index.pz";
-	</c:if>
-		
-	<c:if test="${n==1 && gobackURL != null}">
-		alert("로그인 성공!");
-		location.href="${gobackURL}";
-	</c:if>
-	
-	<c:if test="${n==0}">
-		alert("암호가 틀림.");
-	</c:if>	
-		
-	<c:if test="${n==-1}">
-		alert("아이디없음.");
-		javascript:history.back();
-	</c:if>
+   <c:if test="${n==1 && gobackURL == null && userid !='admin2@admin.com'}">      
+      location.href = "<%=request.getContextPath()%>/index.pz";
+   </c:if>
+   
+   <c:if test="${n==1 && gobackURL == null && userid =='admin2@admin.com'}">      
+      location.href = "<%=request.getContextPath()%>/admin_index.pz";
+    </c:if>
+
+   <c:if test="${n==1 && gobackURL != null}">
+      alert("로그인 성공!");
+      location.href="${gobackURL}";
+   </c:if>
+   
+   <c:if test="${n==0}">
+      alert("암호가 틀림.");
+   </c:if>   
+      
+   <c:if test="${n==-1}">
+      alert("아이디없음.");
+      javascript:history.back();
+   </c:if>
 </script>

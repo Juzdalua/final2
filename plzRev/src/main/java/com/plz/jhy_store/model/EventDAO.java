@@ -100,6 +100,18 @@ public class EventDAO implements InterEventDAO {
 		int n = sqlsession.insert("plz.buyEnd",map);
 		return n;
 	}
+	
+	/////////////////////////////////////////////////////////////// 관리자
+   
+	// ==== 이벤트 등록하기 ====
+	@Override
+	public List<HashMap<String, String>> admin_getEventList(HashMap<String, Object> map) {
+		
+		
+		List<HashMap<String, String>> list = sqlsession.selectList("plz.admin_getEventList",map);
+		
+		return list;
+	}
 
 
 

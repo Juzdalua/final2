@@ -64,6 +64,12 @@ public class MyPageController {
 	  //리뷰 리스트 갯수 얻어오기
 	   int totalcntRev = service.getTotalCntRev(email);
 	   
+	   //예매내역 갯수 얻어오기
+	   int totalRev = service.getTotalRev(email);
+	   
+	   //예매취소내역 갯수 얻어오기
+	   int totalCancel = service.gettotalCancel(email);
+	   
 	   req.setAttribute("totalcntCoupon", totalcntCoupon);
 	   req.setAttribute("cntMovieCoupon", cntMovieCoupon);
 	   req.setAttribute("cntStoreCoupon", cntStoreCoupon);
@@ -74,6 +80,9 @@ public class MyPageController {
 	   req.setAttribute("totalcntQna", totalcntQna);
 	   
 	   req.setAttribute("totalcntRev", totalcntRev);
+	   
+	   req.setAttribute("totalRev", totalRev);
+	   req.setAttribute("totalCancel", totalCancel);
 		  
 	   req.setAttribute("email", email);
 	   session.setAttribute("loginuser", loginuser);
@@ -514,7 +523,110 @@ public class MyPageController {
 		      
 	   }// end of deleteReview(HttpServletRequest req) ------------------------------------------------
 	
-	
+	@RequestMapping(value="/mypage_booking.pz", method={RequestMethod.GET})
+	public String mypage_booking(HttpServletRequest req){
+		
+	   String email = req.getParameter("email");
+	   String start = req.getParameter("start");
+	   String len = req.getParameter("len");
+	   String signal = req.getParameter("signal");
+	      
+	   if (start.trim().isEmpty()) {
+			// if (start == null 이 아님!!!!  start 의 값이 "" 이므로
+			// 또는 if ("".equals(start.trim())) 으로 해도 된다.
+		   start = "1";
+	   }
+		
+	   if (len.trim().isEmpty()) {
+			// if (len == null 이 아님!!!!  len 의 값이 "" 이므로
+			// 또는 if ("".equals(len.trim())) 으로 해도 된다.
+		   len = "8";
+	   }
+	   int startrno = Integer.parseInt(start);              // 시작 행번호
+	   int endrno = startrno + (Integer.parseInt(len) - 1); // 끝 행번호
+	   // 공식!! endrno = startrno + (보여줄갯수 - 1)
+	   HashMap<String, Object> map = new HashMap<String, Object>();
+		
+	   map.put("email", email);
+	   map.put("startrno", startrno);
+	   map.put("endrno", endrno);
+	   map.put("signal", signal);
+	   // signal -> 1:예매내역 / 2:취소내역
+	   
+	   //리스트 얻어오기
+	   List<HashMap<String, String>> couponList = service.getBookingList(map);
+		
+	   JSONArray jsonMap = new JSONArray();
+	   HashMap getValue = new HashMap();
+		/*rno, bookingno, totalprice, general, student, screenname, screendate, 
+       starttime, endtime, fk_theaterno, fk_movieno, theatername, moviename, medianame, status, seat*/
+	   
+	   if (couponList != null) {
+		   for(int i=0; i<couponList.size(); i++) {
+			   getValue = (HashMap)couponList.get(i);
+			   JSONObject jsonObj = new JSONObject();
+			   
+			   jsonObj.put("rno", (String)getValue.get("rno"));
+			   jsonObj.put("bookingno", (String)getValue.get("bookingno"));
+			   jsonObj.put("totalprice", (String)getValue.get("totalprice"));
+			   
+			   String general = (String)getValue.get("general");
+			   String student = (String)getValue.get("student");
+			   String people = "";
+			   if("0".equals(general)){
+				   people = "학생"+student;
+			   }
+			   else if("0".equals(student)){
+				   people = "성인"+general;
+			   }
+			   else{
+				   people = "성인"+general+",학생"+student;
+			   }
+			   
+			   jsonObj.put("general", (String)getValue.get("general"));
+			   jsonObj.put("student", (String)getValue.get("student"));
+			   jsonObj.put("people", people);
+			   
+			   jsonObj.put("screenname", (String)getValue.get("screenname"));
+			   jsonObj.put("screendate", (String)getValue.get("screendate"));
+			   jsonObj.put("starttime", (String)getValue.get("starttime"));
+			   jsonObj.put("endtime", (String)getValue.get("endtime"));
+			   jsonObj.put("fk_theaterno", (String)getValue.get("fk_theaterno"));
+			   jsonObj.put("fk_movieno", (String)getValue.get("fk_movieno"));
+			   jsonObj.put("theatername", (String)getValue.get("theatername"));
+			   jsonObj.put("moviename", (String)getValue.get("moviename"));
+			   jsonObj.put("medianame", (String)getValue.get("medianame"));
+			   jsonObj.put("fk_email", (String)getValue.get("fk_email"));
+			   
+			   String status = (String)getValue.get("status");
+			   String status_name = "";
+			   if("1".equals(status)){
+				   status_name = "취소가능";
+			   }
+			   else if("0".equals(status)){
+				   status_name = "취소불가";
+			   }
+			   jsonObj.put("status", (String)getValue.get("status"));
+			   jsonObj.put("status_name", status_name);
+			   
+			   jsonObj.put("seat", (String)getValue.get("seat"));
+			   jsonObj.put("email", (String)getValue.get("email"));
+			   
+			   jsonMap.put(jsonObj);
+		   }
+	   }
+	   
+	   String str_jsonMap = jsonMap.toString();
+	   System.out.println("");
+	   System.out.println(str_jsonMap);
+	   System.out.println("");
+	   req.setAttribute("str_jsonMap", str_jsonMap);
+		
+		return "mypageBookingJSON.notiles";
+	}
+	   
+	   
+	   
 }
 
 

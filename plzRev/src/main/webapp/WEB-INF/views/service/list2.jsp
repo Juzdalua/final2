@@ -41,6 +41,9 @@
    }
    
    
+   
+   
+   
 </script>
 <body>
   <h2 align="left"><span style="font-weight: bold; margin-left: 13%;"><a href="<%= request.getContextPath()%>/list1.pz">고객센터</a></span></h2>

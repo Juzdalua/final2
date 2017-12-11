@@ -141,4 +141,31 @@
 	    insert into tbl_store_history(fk_store_eventno,status,buy_date,unable_date, discount_money, coupon_no,fk_email)
 	    values(#{store_eventno},default,default,default,#{price},#{store_eventno}||seq_tbl_store_history.nextval,#{email})	    
 	</insert>	
+	
+	<!-- ==== 이벤트 보여주기  ==== -->
+	<resultMap type="java.util.HashMap" id="getEvent">
+	    <result property="rno" 	column="rno" 		javaType="String" ></result>
+     	<result property="fk_name" 	column="fk_name" 		javaType="String" />
+		<result property="start_day" 	column="start_day" 		javaType="String" />
+		<result property="end_day" 	column="end_day" 		javaType="String" />
+		<result property="category" 	column="category" 		javaType="String" />
+		<result property="store_eventno" 	column="store_eventno" 		javaType="String" />
+	</resultMap>    
+    <select id="admin_getEventList" resultMap="getEvent" parameterType="HashMap">
+		select rno ,fk_name, to_char(start_day,'yyyy-mm-dd') as start_day, to_char(end_day,'yyyy-mm-dd') as end_day, category, store_eventno
+		from
+		(
+		select rownum as rno , V.*
+		from 
+		(
+		select fk_name, start_day, end_day, store_eventno ,category
+		from tbl_store
+		where category in (3,4,5)
+		and status= #{status}
+		order by store_eventno desc
+		)V
+		)T
+	   where T.rno between #{startrno} and #{endrno} 	
+	</select>
+	
 </mapper> 
