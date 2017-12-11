@@ -24,14 +24,20 @@ public class HomeController {
 	
 	@Autowired
 	private IPlzService service;
-	
+
+		
 	//메인페이지                      
 	@RequestMapping(value = "/index.pz", method = RequestMethod.GET)
 	public String index() {		
-		
-		return "index.tiles";
-	}     
-		
+			
+			return "index.tiles";
+	}
+	//메인페이지                      
+	@RequestMapping(value = "/admin_index.pz", method = RequestMethod.GET)
+		public String admin_index() {		
+				
+			return "admin_index.tiles";
+	}   
 	
 	// ====  로그인 페이지 요청. =====
 	@RequestMapping(value="/login.pz",method={RequestMethod.GET})
@@ -74,7 +80,7 @@ public class HomeController {
 			//세션에 저장된 돌아갈 페이지 불러오기
 			String gobackURL = (String)session.getAttribute("gobackURL");
 			req.setAttribute("gobackURL", gobackURL);
-			
+			req.setAttribute("userid", userid);
 			//url 저장하고 삭제하기
 			session.removeAttribute("gobackURL");
 		}//if
@@ -107,13 +113,11 @@ public class HomeController {
 		
 		//처음이라면 아이디를 입력하는 폼 띄우기
 		if(req.getMethod() == "GET"){
-			System.out.println("1111");
 			
 		}//if
 		
 		//
 		else if(req.getMethod() == "POST"){
-			System.out.println("222222");
 			String email = req.getParameter("userid");
 			//1이면 존재하는 id
 			int isUseuserid = service.isUseuserid(email);

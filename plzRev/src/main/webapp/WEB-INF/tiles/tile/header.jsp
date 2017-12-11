@@ -229,8 +229,11 @@
 </script>
 
 <body>
+
     <div class="navbar-fixed-top" id="fixed-menu" align="center" style="border-bottom:1px solid #e6e6e6; height:50px;">
       <table class="t-style">
+      <c:if test="${(sessionScope.loginuser != null && sessionScope.loginuser.email!='admin2@admin.com') ||sessionScope.loginuser == null }">          
+               
          <tr class="t-style" style="border-left:none; border-right:none;">
             <th class="t-style" style="border-left:none;"><a href="index.pz"><img src="<%=request.getContextPath() %>/resources/images/megabox.png"></a></th>
             <th class="t-style"><a href="jun_movie.pz">영화</a></th>
@@ -238,22 +241,35 @@
             <th class="t-style"><a href="#">영화관</a></th>
             <th class="t-style"><a href="store.pz">스토어</a></th>
             <th class="t-style"><a href="event.pz">이벤트</a></th>
-            <th class="t-style"><a href="#">고객센터</a></th>
+            <th class="t-style"><a href="list1.pz">고객센터</a></th>
             <c:if test="${sessionScope.loginuser == null }">            
-
-               <th class="t-style"><a style="cursor:pointer;" onclick="document.getElementById('id01').style.display='block'">로그인</a></th>
+            
+             <th class="t-style"><a style="cursor:pointer;" onclick="document.getElementById('id01').style.display='block'">로그인</a></th>
 
             </c:if>
 
-            <c:if test="${sessionScope.loginuser != null }">          
+            <c:if test="${sessionScope.loginuser != null}">          
                <th class="t-style"><a href="mypage.pz">MY페이지</a></th>
                <th class="t-style"><a href="<%=request.getContextPath()%>/logout.pz">로그아웃</a></th>
             </c:if> 
-
-
+          </tr>
+          </c:if>
+          
+          <c:if test="${(sessionScope.loginuser != null && sessionScope.loginuser.email=='admin2@admin.com') }">          
+               
+         <tr class="t-style" style="border-left:none; border-right:none;">
+            <th class="t-style" style="border-left:none;"><a href="index.pz"><img src="<%=request.getContextPath() %>/resources/images/megabox.png"></a></th>
+            <th class="t-style"><a href="">영화 관리</a></th>
+            <th class="t-style"><a href="">영화관 관리</a></th>
+            <th class="t-style"><a href="">회원 관리</a></th>
+            <th class="t-style"><a href="admin_store.pz">스토어 관리</a></th>
+            <th class="t-style"><a href="admin_event.pz">이벤트 관리</a></th>
+            <th class="t-style"><a href="">고객센터 관리</a></th>
+            <th class="t-style"><a href="<%=request.getContextPath()%>/logout.pz">로그아웃</a></th> 
          </tr>
+         </c:if>
       </table>  
-      
+   
       
    <div id="id01" class="modal-head">
      

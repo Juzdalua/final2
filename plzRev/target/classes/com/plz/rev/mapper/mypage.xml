@@ -163,6 +163,80 @@
 		where categoryno=2 and serviceno=#{serviceno}
 	</select>
 	
+	
+	<!-- 포인트 전체 갯수 카운트하기 -->
+	<select id="getTotalCntPoint" parameterType="String" resultType="int">
+		select count(*) as cnt
+		from tbl_point
+		where fk_email=#{email}
+	</select>
+	
+	<!-- 포인트 7일이내 갯수 카운트하기 -->
+	<select id="getCntPointF" parameterType="String" resultType="int">
+		select count(*) as cnt
+		from tbl_point
+		where fk_email=#{email}
+		and to_date(to_char(sysdate, 'yyyy-mm-dd'))-to_date(to_char(reg_time, 'yyyy-mm-dd')) <![CDATA[<]]> 7
+	</select>
+	
+		<!-- 포인트 30일이내 갯수 카운트하기 -->
+	<select id="getCntPointS" parameterType="String" resultType="int">
+		select count(*) as cnt
+		from tbl_point
+		where fk_email=#{email}
+		and to_date(to_char(sysdate, 'yyyy-mm-dd'))-to_date(to_char(reg_time, 'yyyy-mm-dd')) <![CDATA[<]]> 30
+		
+	</select>
+	
+		<!-- 포인트 90일이내 갯수 카운트하기 -->
+	<select id="getCntPointT" parameterType="String" resultType="int">
+		select count(*) as cnt
+		from tbl_point
+		where fk_email=#{email}
+		and to_date(to_char(sysdate, 'yyyy-mm-dd'))-to_date(to_char(reg_time, 'yyyy-mm-dd')) <![CDATA[<]]> 90
+	</select>
+
+
+	<!-- email로 쿠폰리스트 얻어오기 -->
+	<resultMap type="java.util.HashMap" id="getPointListMap">
+		<result property="rno" 			column="rno" 				javaType="String" />
+ 		<result property="pointno" 		column="pointno" 			javaType="String" />
+ 		<result property="reg_time" 	column="reg_time" 			javaType="String" />
+ 		<result property="content" 		column="content" 			javaType="String" />
+ 		<result property="type" 		column="type" 				javaType="String" />
+ 		<result property="point" 		column="point" 				javaType="String" />
+ 		
+	</resultMap>
+	<select id="getPointList" parameterType="HashMap" resultMap="getPointListMap">
+		select rno, pointno, 
+		      to_char(reg_time,'yyyy-mm-dd hh24:mi:ss') as reg_time
+		      , content, type, point
+		from
+		(
+		  select rownum as rno, pointno, reg_time, content, type, point
+		  from
+		  (
+		    select pointno, reg_time, content, type, point
+		    from tbl_point
+		    where fk_email = #{email}
+		    order by reg_time desc
+		  )v
+		)T
+		where rno between #{startrno} and #{endrno}
+		<if test="period == 7">
+		and to_date(to_char(sysdate, 'yyyy-mm-dd'))-to_date(to_char(reg_time, 'yyyy-mm-dd')) <![CDATA[<]]> 7
+		</if>
+		<if test="period == 30">
+		and to_date(to_char(sysdate, 'yyyy-mm-dd'))-to_date(to_char(reg_time, 'yyyy-mm-dd')) <![CDATA[<]]> 30
+		</if>
+		<if test="period == 90">
+		and to_date(to_char(sysdate, 'yyyy-mm-dd'))-to_date(to_char(reg_time, 'yyyy-mm-dd')) <![CDATA[<]]> 90
+		</if>
+		
+	</select>
+
+
+
     <!-- 문의 전체 갯수 카운트하기 -->
 	<select id="getTotalCntRev" parameterType="String" resultType="int">
 		select count(*) as cnt

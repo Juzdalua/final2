@@ -93,6 +93,16 @@ public class EventService implements InterEventService {
 		int n =dao.buyEnd(map);
 		return n;
 	}
+	
+	/////////////////////////////////////////////////////////////// 관리자
+
+	// ==== 이벤트 불러오기 ====
+	@Override
+	public List<HashMap<String, String>> admin_getEventList(HashMap<String, Object> map) {
+		List<HashMap<String, String>> mapList = dao.admin_getEventList(map);
+		
+		return mapList;
+	}
 
 
 
