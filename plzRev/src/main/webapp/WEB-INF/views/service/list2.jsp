@@ -39,12 +39,8 @@
 			frm.submit();
 		}
 	}
-	function godetail(){
-		var frm = document.detailFrm;
-		
-		frm.action = "<%= request.getContextPath()%>/list2Detail.pz";
-		frm.submit();
-	}
+	
+	
 	
 	
 	
@@ -90,7 +86,7 @@
 	      <tr class="col">
 	        <td style="width: 10%;">${nvo.serviceno}</td>
 	        <td style="width: 10%;">${nvo.theatername}</td>
-	        <td style="width: 60%;" onclick="godetail();">${nvo.title}</td>
+	        <td style="width: 60%;"><a href="list2Detail.pz?serviceno=${nvo.serviceno}">${nvo.title}</a></td>
 	        <td style="width: 10%;">${nvo.writedate}</td>
 	        <td style="width: 10%;">${nvo.cnt}</td>
 	      </tr>
@@ -99,7 +95,7 @@
 	      <tr>
 	        <td style="width: 10%;">${nvo.serviceno}</td>
 	        <td style="width: 10%;">${nvo.theatername}</td>
-	        <td style="width: 60%;" onclick="godetail();">${nvo.title}</td>
+	        <td style="width: 60%;"><a href="list2Detail.pz?serviceno=${nvo.serviceno}">${nvo.title}</a></td>
 	        <td style="width: 10%;">${nvo.writedate}</td>
 	        <td style="width: 10%;">${nvo.cnt}</td>
 	      </tr>

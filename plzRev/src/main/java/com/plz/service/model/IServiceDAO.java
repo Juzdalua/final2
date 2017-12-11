@@ -27,6 +27,10 @@ public interface IServiceDAO {
 
 	List<HashMap<String, String>> movieList(String search);
 
+	HashMap<String, String> showNoticeDetail(String serviceno);
+
+	void setAddReadCount(String serviceno);
+
 
 
 

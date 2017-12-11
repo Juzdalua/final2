@@ -168,10 +168,10 @@ public class MyUtil {
 		String str_pageNo = "";
 		
 		if (pageNo == 1) {
-			str_pageNo = "&nbsp;[이전"+blockSize+"페이지]";
+			str_pageNo = "&nbsp;<<&nbsp";
 		}
 		else {
-			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+(pageNo-1)+"&sizePerPage="+sizePerPage+"\" >"+"[이전"+blockSize+"페이지]</a>&nbsp;"; 
+			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+(pageNo-1)+"&sizePerPage="+sizePerPage+"\" >"+"<<</a>&nbsp;"; 
 		}
 		
 		pageBar += str_pageNo;
@@ -190,10 +190,10 @@ public class MyUtil {
 		}
 		
 		if (pageNo > totalPage) {
-			str_pageNo = "&nbsp;[다음"+blockSize+"페이지]";
+			str_pageNo = "&nbsp;>>&nbsp;";
 		}
 		else {
-			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"\" >"+"[다음"+blockSize+"페이지]</a>&nbsp;"; 
+			str_pageNo = "&nbsp;<a href=\""+url+"?currentShowPageNo="+pageNo+"&sizePerPage="+sizePerPage+"\" >"+">></a>&nbsp;"; 
 		}
 		
 		pageBar += str_pageNo;	
@@ -342,6 +342,7 @@ public static String getPageBarNoticeWithSearch(int sizePerPage, int blockSize, 
 		
 		return currentURL;
 	}// end of static String getCurrentURL()-----------------------------------
+
 	
 	
 		

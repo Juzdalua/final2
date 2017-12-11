@@ -11,7 +11,7 @@
       
 </style>
 
-<script src="<%=request.getContextPath()%>/resources/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+
     
 <script>    
     

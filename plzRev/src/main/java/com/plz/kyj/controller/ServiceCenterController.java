@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
@@ -64,9 +65,7 @@ public class ServiceCenterController {
 	public String list2(HttpServletRequest req, HttpSession session) {		
 		
 		List<HashMap<String, String>> noticeList = null;
-		
-		List<HashMap<String, String>> noticeCategory = service.getNoticeCategoryList();
-		req.setAttribute("noticeCategory", noticeCategory);
+	
 		
 		// 돌아갈 페이지를 위해서 현재페이지의 주소를 뷰단으로 넘겨준다.
 		String gobackURL = MyUtil.getCurrentURL(req);	
@@ -106,38 +105,41 @@ public class ServiceCenterController {
 		
 		startRno = ((currentShowPageNo-1)*sizePerPage) + 1;
 		endRno = startRno + sizePerPage - 1;
-		
+	
 		map.put("startRno", String.valueOf(startRno));
 		map.put("endRno", String.valueOf(endRno));
 		
-		if (search != null ) {  // 검색어가 있는경우
-			
-			noticeList = service.getNoticeList2(map);
-			System.out.println(search);
-			req.setAttribute("noticeList", noticeList);
-		}
-		else { // 검색어가 없는경우
-			noticeList = service.getNoticeList(map);
-			req.setAttribute("noticeList", noticeList);
-		}
-		
-		
-		
 		if (search != null) {  // 검색어가 있는경우
-			
-			totalCount = service.getTotalCount2(map);
-			req.setAttribute("totalCount", totalCount);
-		}
-		else { // 검색어가 없는경우
-			totalCount = service.getTotalCount1();
-			req.setAttribute("totalCount", totalCount);
-		}
+	         
+	         totalCount = service.getTotalCount2(map);
+	         req.setAttribute("totalCount", totalCount);
+	      }
+	      else { // 검색어가 없는경우
+	         totalCount = service.getTotalCount1();
+	         req.setAttribute("totalCount", totalCount);
+	      }
+	      
 		
 		totalPage = (int)Math.ceil( (double)totalCount/sizePerPage );
 		
 		String pagebar = "<ul>";
 		
-		pagebar += MyUtil.getPageBarNoticeWithSearch(sizePerPage, blockSize, totalPage, currentShowPageNo, title, search, "list2.pz");
+		if (search != null){  // 검색어가 있는경우
+			
+			noticeList = service.getNoticeList2(map);
+			
+			req.setAttribute("noticeList", noticeList);
+			
+			pagebar += MyUtil.getPageBarNoticeWithSearch(sizePerPage, blockSize, totalPage, currentShowPageNo, title, search, "list2.pz");
+			
+		}
+		else { // 검색어가 없는경우
+			noticeList = service.getNoticeList(map);
+			req.setAttribute("noticeList", noticeList);
+			
+			pagebar += MyUtil.getPageBar(sizePerPage, blockSize, totalPage, currentShowPageNo, "list2.pz");
+			
+		}
 		
 		pagebar += "</ul>"; 
 		
@@ -157,13 +159,28 @@ public class ServiceCenterController {
 	@RequestMapping(value = "/list2Detail.pz", method = RequestMethod.GET)
 	public String list2Detail(HttpServletRequest req, HttpSession session) {		
 		
-		String title = req.getParameter("title");
-		String cnt = req.getParameter("cnt");
-		String theatername = req.getParameter("theatername");
-		String writedate = req.getParameter("writedate");
+		String serviceno = req.getParameter("serviceno");
+
+		HashMap<String, String> noticevo = null;
+	    
+		if (session.getAttribute("readCountPermission") != null &&
+			"yes".equals(session.getAttribute("readCountPermission"))	
+		   ) {
+			// session에서 "readCountPermission" 키값을 읽었을때
+			// 그 값이 "yes" 이라면 글조회수를 1증가를 해주겠다.
+			
+			noticevo = service.showNoticeDetail(serviceno);
+			
+			session.removeAttribute("readCountPermission");
+		}
+		else {
+			// 웹브라우저에서 새로고침(F5)을 했을 경우
+			
+			noticevo = service.showNoticeDetailNoAddCount(serviceno); 
+			// 조회수(readCount) 증가 없이 그냥 글1개를 보여주어야 한다.
+		}
 		
-		
-		
+		req.setAttribute("noticevo", noticevo);
 		
 		return "service/list2Detail.tiles";
 	}

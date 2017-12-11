@@ -30,6 +30,10 @@ public interface IPlzRevService {
 
 	List<HashMap<String, String>> movieList(String search);
 
+	HashMap<String, String> showNoticeDetail(String serviceno); // 공지사항 디테일 보기 (조회수 증가) 
+
+	HashMap<String, String> showNoticeDetailNoAddCount(String serviceno); // 조회수 없이 보여주기 
+
 
 	
 

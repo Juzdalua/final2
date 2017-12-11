@@ -28,6 +28,10 @@ public interface InterEventService {
 	HashMap<String, String> storeDetail(String name); // ==== 스토어 상세 페이지 보여주기 ====
 
 	int buyEnd(HashMap<String, Object> map); // ==== 구매등록하기 =====
+
+	////////////////////////////////////////////////////////////////////////////////  관리자
+	
+	List<HashMap<String, String>> admin_getEventList(HashMap<String, Object> map); // ==== 이벤트 불러오기 ====
 	
 
 

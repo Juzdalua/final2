@@ -7,24 +7,37 @@
       
    });
    
-   function goinsert() {
-      var radio = Frm.radio.value;
-      var title = $("#title").val();
-      var movie = $("#movie").val();
-      var msg = $("#msg").val();
-      var email = $("#email").val();
-      var name = $("#name").val();
+   function goInsert() {
+      var radio = Frm.ok.value;
+      var title = Frm.title.value;
+      var movie = Frm.movie.value;
+      var msg = Frm.msg.value;
+      var email = Frm.email.value;
+      alert(email);
       
-      if(radio != "11"){
-         alert("약관에 동의 하셔야 합니다.");
-      }
-      if(movie == null || name == null ||msg == null  ||title == null){
+       if(movie == "" ||msg == ""  ||title == ""){
          alert("필수입력란을 채워주세요!");
+         return;
+      }else{
+         if(radio != "11"){
+            alert("약관에 동의 하셔야 합니다.");
+            return;
+         }else{
+            
+            var frm = document.Frm;
+            
+            frm.method = "get";
+            frm.action = "list3_insert.pz";
+            frm.submit();
+            
+         }
       }
+      
       
    }
    
    function  goSearch() {
+	   
       var search = Frm.search.value;
    
       
@@ -95,13 +108,14 @@ input.upload {
     <li class="active"><a href="<%= request.getContextPath()%>/list3.pz"> 1 : 1 문의 </a></li>
   </ul>
 </div>
-
+<form name="Frm">
+     
 <div class="container">
     <div class="col-md-10" style="padding-left: 174px;">
     <br/><br/>
-    <form name="Frm">
-        <h3 class="entry-title"><span style="padding-right: 80%;">1:1 문의 작성</span> </h3>
+       <h3 class="entry-title"><span style="padding-right: 80%;">1:1 문의 작성</span> </h3>
          <br/>
+        
       <div align="center">
          <div style="text-align: left; vertical-align: middle;">
             <iframe src="<%= request.getContextPath() %>/agree.pz" width="100%" height="250px" class="box" ></iframe>
@@ -117,51 +131,46 @@ input.upload {
       <br/>
    </div>
    </div>
-   
+    
     <h3 class="entry-title"><span style="padding-right: 45%;">문의사항</span> </h3><p>
+      <p style="border: 1px solid black;margin-right:27px; width: 50.7%;"></p>
+      <br/>
+      <div style="width: 40%; text-align: left; padding-bottom: 100px;">
+      영화관<input type="text" id="movie" name="movie" style="border:1px solid LightGray; border-radius: 5px; height: 30px;" size="15px" />
+       <button type="button" class="btn btn-info btn-sm"  onclick="document.getElementById('myModal').style.display='block'">영화관찾기</button><br/>
       
-         <p style="border: 1px solid black;margin-right:27px; width: 50.7%;"></p>
-         <br/>
-         <div style="width: 40%; text-align: left; padding-bottom: 100px;">
-            이름<input type="text" style="border:1px solid LightGray; margin-left:25px; border-radius: 5px;"  placeholder=" Name" required /><br/><br/>
-         
-         <div class="container">
-           <!-- Trigger the modal with a button -->
-           <input type="text" id="movie" name="movie"/>
-           <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">영화관찾기</button>
-         
-           <!-- Modal -->
-           <div class="modal fade" id="myModal" role="dialog">
-             <div class="modal-dialog modal-lg">
-               <div class="modal-content">
-                 <div class="modal-header">
-                   <button type="button" class="close" data-dismiss="modal">&times;</button>
-                   <h4 class="modal-title">영화관 검색</h4>
-                 </div>
-                
-                 <div class="modal-body">
-                      <div>
-                         <input type="text" id="search" name="search"/>
-                         <button type="button" onClick="goSearch();">검색</button>
-                      </div>    
-                 </div>
-                 <div id="movieList"></div>
-                 <div class="modal-footer">
-                   <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                 </div>
-                 
-               </div>
-             </div>
-           </div>
-         </div>
-         이메일<input id="email" name="email" type="text" style="border:1px solid LightGray; margin-left:13px;  border-radius: 5px; width: 28%;"  placeholder=" Email@gmail.com"  required />&nbsp;&nbsp;<input type="checkbox"/><span style="font-size: 12px;">이메일로 답변받기</span><br/><br/>
-         제목<input id="title" name="title" type="text" style="border:1px solid LightGray; margin-left:25px; border-radius: 5px; height: 30px;"size="60px;"  placeholder=" 제목을 입력하세요" required /><br/><br/>
-         내용<input id="msg" name="msg" type="text" style="border:1px solid LightGray; margin-left:25px; border-radius: 5px;height: 100px; text-align: left;" size="60px;" row="8" placeholder=" 내용을 입력하세요(최대 2000자)" required /><br/><br/>
-            
-              <button type="button" style="margin-left: 200px; width: 70px; text-align: center; border: #351F65; background-color: #351F65; color:white; border-radius: 5px; height: 30px;" onClick="goinsert();">등록</button>
-         </div>
-      </form>
+       
+     <div id="myModal" class="modal-head">
+        <div class="modal-content-head">
+          <div class="container-head">
+                <button type="button" class="close">&times;</button>
+                <h4 >영화관 검색</h4>
+              </div>
+              <div class="container-head">
+                   <div>
+                      <input type="text" id="search" name="search"/>
+                      <button type="button" onClick="goSearch();">검색</button>
+                   </div>    
+              </div>
+              <div id="movieList" style="padding-left:10%; width: 90%;"></div><br/>
+         <div class="container-head" style="background-color:#f1f1f1">
+         <button  type="button" onclick="document.getElementById('myModal').style.display='none'" >닫기</button><br>
+        </div>
+       </div> 
+     </div>
+           
+
+        
+     <br/>
+      이메일<input id="email" name="email" type="text" size="30" style="border:1px solid LightGray; margin-left:13px;  border-radius: 5px; width: 28%;"  placeholder=" Email@gmail.com"  required />
+      &nbsp;<span style="font-size: 9pt;">답변이 등록되면 이메일로 전송됩니다.</span><br/>
+      <br/>
+      제목<input id="title" name="title" type="text" style="border:1px solid LightGray; margin-left:25px; border-radius: 5px; height: 30px;"size="60px;"  placeholder=" 제목을 입력하세요" required /><br/><br/>
+      내용<input id="msg" name="msg" type="text" style="border:1px solid LightGray; margin-left:25px; border-radius: 5px;height: 100px; text-align: left;" size="60px;" row="8" placeholder=" 내용을 입력하세요(최대 2000자)" required /><br/><br/>
+     <button type="button" style="margin-left: 200px; width: 70px; text-align: center; border: #351F65; background-color: #351F65; color:white; border-radius: 5px; height: 30px;" onClick="goInsert();">등록</button>
+   </div>
+   </form>
+    
 </body>
-</html>
 
 <br/><br/><br/>

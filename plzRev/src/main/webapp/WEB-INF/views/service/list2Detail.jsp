@@ -11,24 +11,13 @@
 
 <script>
 
-	$(document).ready(function(){
-	   
-		
-		
-		
-	});
-	
-	function searchKeep() {
-		<c:if test="${search != 'null' && not empty search}">  
-		   $("#search").val("${search}");  // 검색에 대한 검색어를 유지시킨다.
-		</c:if>
-	}
-	
-
+  function goEnd(){
+	  location.href="<%= request.getContextPath()%>/list2.pz";
+  }
 	
 </script>
 <body>
-  <h2 align="left"><span style="font-weight: bold; margin-left: 13%;"><a href="<%= request.getContextPath()%>/list1.pz">고객센터</a></span></h2>
+<h2 align="left"><span style="font-weight: bold; margin-left: 13%;"><a href="<%= request.getContextPath()%>/list1.pz">고객센터</a></span></h2>
 <div class="container">
   <br/>
   <ul class="nav nav-tabs" style="font-size: 13pt;">
@@ -39,29 +28,25 @@
 </div>
  
 <br/>
-<h3>상세내용</h3>
-<div class="container">
-  <table class="table" style="text-align: center;">
-    <thead>
-      <tr>
- 		<th></th>
-      </tr>
-      
-    </thead>
-    
-    <tbody>
-    
-		
-	   
-	 
-	</tbody>
-  </table>
+<h2 align="left"><span style="margin-left:24%; font-weight:bold; font-size:23pt">공지사항 상세페이지</span></h2> 
+<br/>
+ <hr style="width: 60%; ">
+<form name="detailFrm">
+ <h2 align="left"><span style="margin-left:24%; font-weight:bold; font-size:16pt">${noticevo.title}</span></h2> 
+ <h4  align="left"><span style="margin-left:24%">영화관:${noticevo.theatername}&nbsp;&nbsp;|&nbsp;&nbsp;
+    등록일 : ${noticevo.writedate}&nbsp;&nbsp;|&nbsp;&nbsp;
+   조회수 : ${noticevo.cnt}</span></h4>
+<br/>
+<hr style="width: 60%;">
+<br/><br/>
+<div class="container" style="width:50%; border :0px solid gray">
+ <h4 align="left">${noticevo.msg}</h4>
+ <br/><br/><br/><br/>
+<button type="button" style="width:90px; height:40px; background-color:#351F65;" onClick="goEnd();"><span style="color: white; font-size:12t; font-weight:bold">목록</span></button>
+         
 </div>
-<div align="center" style="width: 70%; margin-left: 50px;">
-	
-		${pagebar}
-	</div>
 
+ </form>
 </body>
 </html>
 

@@ -86,6 +86,19 @@ public class PlzRevService implements IPlzRevService {
 		return list;
 	}
 
+	@Override
+	public HashMap<String, String> showNoticeDetail(String serviceno) {
+		HashMap<String, String> list = dao.showNoticeDetail(serviceno);
+		dao.setAddReadCount(serviceno);
+		return list;
+	}
+
+	@Override
+	public HashMap<String, String> showNoticeDetailNoAddCount(String serviceno) {
+		HashMap<String, String> list = dao.showNoticeDetail(serviceno);
+		return list;
+	}
+
 	
 
 

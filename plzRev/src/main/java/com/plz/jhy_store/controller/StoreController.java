@@ -230,7 +230,103 @@ public class StoreController {
 						
 			
 		}	
-	
-	
+//////////////////////////////////////////////////////////////////////////////////////////// 관리자
+		
+		// ====  이벤트 페이지. =====
+		@RequestMapping(value="/admin_event.pz",method={RequestMethod.GET})
+		public String admin_event(HttpServletRequest req){
+			
+			int totalIngCount = service.totalIngCount();
+			int totalEndCount = service.totalEndCount();
+			
+			req.setAttribute("totalIngCount", totalIngCount);
+			req.setAttribute("totalEndCount", totalEndCount);
+			
+			return "admin_event/event.tiles";
+		}		
+		
+	   //==== 이벤트 더보기 ====
+		@RequestMapping(value="/adminEventJSON.pz",method={RequestMethod.GET})
+		public String admin_eventJSON(HttpServletRequest req){
+			
+			String start = req.getParameter("start");
+		    String len = req.getParameter("len");
+			String status = req.getParameter("status");
+			      
+			   if (start.trim().isEmpty()) {
+					  start = "1";
+			   }
+			   if (len.trim().isEmpty()) {
+					 len = "8";
+			   }
+			   int startrno = Integer.parseInt(start);              // 시작 행번호
+			   int endrno = startrno + (Integer.parseInt(len) - 1); // 끝 행번호
+			   
+			   System.out.println(startrno+" "+endrno);
+			   System.out.println(status);
+			   
+			   HashMap<String, Object> map = new HashMap<String, Object>();
+			   map.put("startrno", startrno);
+			   map.put("endrno", endrno);
+			   map.put("status", status);
+			   /*  <!-- 3- 영화 할인권 / 4 - 매점 할인권 / 5 - 일반 이벤트 --> */
+			   
+			   //쿠폰리스트 얻어오기
+			   List<HashMap<String, String>> couponList = service.admin_getEventList(map);
+				
+			   JSONArray jsonMap = new JSONArray();
+			   HashMap getValue = new HashMap();
+				// rno, fk_name, start_day, end_day, category, store_eventno
+			   System.out.println("3333");
+			   
+			   if (couponList != null) {
+				   for(int i=0; i<couponList.size(); i++) {
+					   getValue = (HashMap)couponList.get(i);
+					   JSONObject jsonObj = new JSONObject();
+					   
+					   jsonObj.put("rno", (String)getValue.get("rno"));
+					   jsonObj.put("fk_name", (String)getValue.get("fk_name"));
+					   jsonObj.put("start_day", (String)getValue.get("start_day"));
+					   jsonObj.put("end_day", (String)getValue.get("end_day"));
+					    
+					   /*  <!-- 1 - 영화 관람권 / 2- 매점 교환권  / 3- 영화 할인권 / 4 - 매점 할인권 / 5 - 일반 이벤트 --> */
+					   String category = (String)getValue.get("category");
+					   String category_name = "";
+					   if("3".equals(category)){
+						   category_name = "영화 할인 이벤트";
+					   }
+					   else if("4".equals(category)){
+						   category_name = "매점 할인 이벤트";
+					   }
+					   else if("5".equals(category)){
+						   category_name = "일반 이벤트";
+					   }
+					   
+					   jsonObj.put("category", (String)getValue.get("category"));
+					   jsonObj.put("category_name", category_name);
+					   jsonObj.put("store_eventno", (String)getValue.get("store_eventno"));
+						
+					   jsonMap.put(jsonObj);
+				   }
+			   }
+			   
+			   String str_jsonMap = jsonMap.toString();
+			   System.out.println("");
+			   System.out.println(str_jsonMap);
+			   System.out.println("");
+			   req.setAttribute("str_jsonMap", str_jsonMap);
+			   
+			   return "couponListJSON.notiles";
+		      
+		}		
+		// ====  이벤트 페이지. =====
+		@RequestMapping(value="/admin_registerEvent.pz",method={RequestMethod.GET})
+		public String admin_registerEvent(HttpServletRequest req){
+			
 
+			
+			return "admin_event/registerEvent.tiles";
+		}		
+		
+		
 }
