@@ -67,9 +67,7 @@
 			<ul class="nav" style="text-align: left; padding-left:3px; font-size: 13pt; margin-top: 8px;">
 		    	<c:forEach var="vo" items="${codeList}">
 		    		<li style="display: inline; font-size: 11pt;">&nbsp;&nbsp;
-		    		
 		    		<a style="display: inline;" href="<%= request.getContextPath()%>/categorylist.pz?categorycode=${vo.categorycode}">
-		    		
 		    		${vo.categoryname}(${vo.cnt})&nbsp;&nbsp;</a></li>
 		    	</c:forEach>
 			</ul>
@@ -87,7 +85,7 @@
 		</form>
 		<br/>
 		<p style="margin-top: 10px;border: 0.5px solid; width: 75.5%;  margin-left: 9%; color:white;"></p>
-		<span style="color:white">&nbsp;&nbsp;더 궁금한 점이 있거나, 이미 문의한 내용과 답변을 확인하려면? <a href="<%= request.getContextPath()%>/list3.pz">▶ 1:1문의 바로가기</a>  <a>▶ 나의 문의 내역 바로가기</a></span>
+		<span style="color:white">&nbsp;&nbsp;더 궁금한 점이 있거나, 이미 문의한 내용과 답변을 확인하려면? <a href="<%= request.getContextPath()%>/list3.pz">▶ 1:1문의 바로가기</a>  <a href="<%= request.getContextPath()%>/list3.pz">▶ 1:1문의 바로가기</a>  <a href="<%= request.getContextPath() %>/mypage.pz">▶ 나의 문의 내역 바로가기</a></span>
 		<br/>
 	</div>
 
@@ -126,9 +124,9 @@
     <c:if test="${not empty codeList}">
 	    <c:forEach var="map" items="${faqList}" varStatus="status">
 	      <tr>
-	      	 <td align="center"  style="text-align: left; font-weight: bold;">Q ${map.categorycode}</a> </td>
+	      	 <td align="center"  style="text-align: left; font-weight: bold;">Q ${map.categorycode}</td>
 		      	<td>
-					<p onClick="myFunction('Demo${status.count}')" class="w3-block" style="text-align: left; font-size: 13pt;" /> ${map.title}</p>
+					<p onClick="myFunction('Demo${status.count}')" class="w3-block" style="text-align: left; font-size: 13pt;" />${map.title}</p>
 				    <div id="Demo${status.count}" class="w3-light-grey w3-hide col-sm-15">	
 				    	<p style="height: 50%; padding: 15px;">&nbsp;&nbsp;
 				    	 	<span style="font-size: 15pt; color:red; font-style: italic;">A&nbsp;&nbsp;</span> ${map.content}
@@ -138,9 +136,14 @@
 	      </tr>
 	    </c:forEach>
       </c:if>
+      
     </tbody>
     
+     
   </table>
+   <c:if test="${empty faqList}">
+      	검색하신 "${search}" 은(는) 존재하지 않습니다.
+   </c:if>
 </div>
 
 

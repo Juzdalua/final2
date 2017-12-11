@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ==== mapper 기본 설정 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- ==== 루트 엘리먼트 및 네임스페이스 설정하기(이 네임스페이스의 이름은 프로젝트 전체 내에서 반드시 고유해야만 한다.) --> 
+<mapper namespace="plz">
+	
+	<!-- Faq 메인 -->
+	<resultMap type="java.util.HashMap" id="faqListMap">
+		<result property="categorycode" column="categorycode" 	javaType="String" />
+ 		<result property="title" 		column="title" 			javaType="String" />
+ 		<result property="content" 		column="content" 		javaType="String" />
+	</resultMap>
+	<!-- 검색  X -->
+	<select id="faqList" resultMap="faqListMap">
+		select case when categorycode = 1 then '영화관이용' 
+		            when categorycode = 2 then '회원'
+		            when categorycode = 3 then '온라인'
+		            when categorycode = 4 then '할인혜택'
+		            when categorycode = 5 then '관람권'
+		            when categorycode = 6 then '기프트샵'
+		       else '전체' end as categorycode
+		    , TITLE, CONTENT 
+		from tbl_FAQ 
+	</select>
+	
+	<!-- 검색  O -->
+	
+	<select id="faqListSearch2" parameterType="HashMap" resultMap="faqListMap" >
+		select case when categorycode = 1 then '영화관이용' 
+		            when categorycode = 2 then '회원'
+		            when categorycode = 3 then '온라인'
+		            when categorycode = 4 then '할인혜택'
+		            when categorycode = 5 then '관람권'
+		            when categorycode = 6 then '기프트샵'
+		       else '전체' end as categorycode
+		    , TITLE, CONTENT 
+		from tbl_FAQ 
+		where TITLE like '%'|| #{search} ||'%'
+		<if test="categorycode != ''">
+			and categorycode = #{categorycode}
+		</if>
+	</select>
+  
+	<select id="faqListSearch" parameterType="String" resultMap="faqListMap" >
+		select case when categorycode = 1 then '영화관이용' 
+		            when categorycode = 2 then '회원'
+		            when categorycode = 3 then '온라인'
+		            when categorycode = 4 then '할인혜택'
+		            when categorycode = 5 then '관람권'
+		            when categorycode = 6 then '기프트샵'
+		       else '전체' end as categorycode
+		    , TITLE, CONTENT 
+		from tbl_FAQ 
+		where TITLE like '%'|| #{search} ||'%'
+	</select>
+  
+	
+	<!-- faq 카테고리 -->
+	<resultMap type="java.util.HashMap" id="CodeList">
+ 		<result property="categorycode" 	column="categorycode" 	javaType="String" />
+ 		<result property="cnt" 				column="cnt" 			javaType="String" />
+ 		<result property="categoryname" 	column="categoryname" 	javaType="String" />
+	</resultMap>
+	<select id="getCodeList" resultMap="CodeList">
+		select case 
+		            when categorycode = 1 then '영화관이용' 
+		            when categorycode = 2 then '회원'
+		            when categorycode = 3 then '온라인'
+		            when categorycode = 4 then '할인혜택'
+		            when categorycode = 5 then '관람권'
+		            when categorycode = 6 then '기프트샵'
+		       else '전체' end as categoryname 
+				,categorycode
+			,count(*) as cnt
+		from tbl_FAQ
+		group by rollup(categorycode)
+		order by cnt desc
+
+	</select> 
+	
+	
+	<!-- faq 카테고리별 목록 --> 
+	<select id="getcategoryCodeList" parameterType="String"  resultMap="faqListMap">
+		select case 
+		            when categorycode = 1 then '영화관이용' 
+		            when categorycode = 2 then '회원'
+		            when categorycode = 3 then '온라인'
+		            when categorycode = 4 then '할인혜택'
+		            when categorycode = 5 then '관람권'
+		            when categorycode = 6 then '기프트샵'
+		       else '전체' end as categorycode, TITLE, CONTENT 
+		from tbl_FAQ 
+		where categorycode = #{categorycode}
+	</select> 
+	
+	
+	<!-- 공지목록 -->
+	<resultMap type="java.util.HashMap" id="NoticeList">
+		<result property="serviceno" 	column="serviceno" 		javaType="String" />
+ 		<result property="categoryno" 	column="categoryno" 	javaType="String" />
+ 		<result property="title" 		column="title" 			javaType="String" />
+ 		<result property="msg" 			column="msg" 			javaType="String" />
+ 		<result property="writedate" 	column="writedate" 		javaType="String" />
+ 		<result property="cnt" 			column="cnt" 			javaType="String" />
+ 		<result property="status" 		column="status" 		javaType="String" />
+ 		<result property="important" 	column="important" 		javaType="String" />
+ 		<result property="commentCount" column="commentCount" 	javaType="String" />
+ 		<result property="fk_email" 	column="fk_email" 		javaType="String" />
+ 		<result property="theatername" 	column="theatername" 	javaType="String" />
+ 		<result property="fk_regionno" 	column="fk_regionno" 	javaType="String" />
+	</resultMap>
+	
+	<!-- 검색어가 없는경우 -->
+	<select id="getNoticeList" parameterType="HashMap" resultMap="NoticeList">
+		select serviceno, categoryno,theatername,title,msg,important,writedate, cnt
+		from
+		(
+		select rownum as rno, serviceno, categoryno,theatername,title,msg,important,writedate, cnt
+		from
+		(
+		select A.serviceno,A.categoryno, B.theatername
+				 	,case when B.fk_regionno = 1 then '서울'
+				             when B.fk_regionno = 2 then '경기'
+				             when B.fk_regionno = 3 then '인천'
+				             when B.fk_regionno = 4 then '대전/충청/세종'
+				             when B.fk_regionno = 5 then '부산/대구/경상'
+				             when B.fk_regionno = 6 then '광주/전라울'
+				             when B.fk_regionno = 7 then '강원'
+				             when B.fk_regionno = 8 then '제주'
+						else '전체' end as fk_regionno , A.title, A.msg,A.important
+					, to_char(A.writedate,'yyyy-mm-dd')as writedate, A.cnt
+				from tbl_serviceCenter A join tbl_theater B
+				on A.fk_theaterno = B.theaterno
+				where categoryno = 1
+				order by A.important desc, A.serviceno desc
+		)V
+		)T
+		where T.RNO between #{startRno} and  #{endRno}
+	</select>
+	
+	
+	<!-- 검색어가 있는경우 -->
+	<select id="getNoticeList2" parameterType="HashMap" resultMap="NoticeList">
+	  select serviceno, categoryno, theatername, title, msg, important, writedate, cnt
+	  from
+	  (
+	  select rownum as rno, serviceno, categoryno, theatername, title, msg, important, writedate, cnt
+	  from
+	  (
+	   select A.serviceno, A.categoryno, B.theatername, B.fk_regionno, A.title, A.msg,A.important
+	        , to_char(A.writedate,'yyyy-mm-dd')as writedate, A.cnt
+	   from tbl_serviceCenter A join tbl_theater B
+	   on A.fk_theaterno = B.theaterno
+	   where TITLE  like '%'||#{search}||'%' 
+	   and categoryno = 1
+	   order by A.important desc, A.serviceno desc
+	  )V
+	)T
+	where T.RNO between #{startRno} and #{endRno}
+  
+	</select>
+	
+
+
+
+
+	<!-- 공지 카테고리 -->
+	<resultMap type="java.util.HashMap" id="NoticeCList">
+		<result property="fk_regionno" 	column="regionno" 		    javaType="String" />
+		<result property="cnt" 	column="cnt" 		javaType="String" />
+	</resultMap>
+	<select id="getNoticeCategoryList" resultMap="NoticeCList">
+		 select case when fk_regionno = 1 then '서울'
+		             when fk_regionno = 2 then '경기'
+		             when fk_regionno = 3 then '인천'
+		             when fk_regionno = 4 then '대전/충청/세종'
+		             when fk_regionno = 5 then '부산/대구/경상'
+		             when fk_regionno = 6 then '광주/전라울'
+		             when fk_regionno = 7 then '강원'
+		             when fk_regionno = 8 then '제주'
+				else '전체' end as fk_regionno 
+		      ,count(*)as cnt
+		  from tbl_theater 
+		  group by rollup(fk_regionno)
+		  order by cnt desc
+	</select>
+	
+	
+	<!-- 총글갯수 -->
+	<!-- 검색어 X -->
+	<select id="getTotalCount1" resultType="int">
+		select count(*)
+	    from tbl_serviceCenter A join tbl_theater B
+		on A.fk_theaterno = B.theaterno
+	    where status = 1
+	    and categoryno = 1
+	</select>
+	
+	<!-- 검색어O -->
+	<select id="getTotalCount2" parameterType="HashMap" resultType="int">
+		select count(*)
+	    from tbl_serviceCenter A join tbl_theater B
+		on A.fk_theaterno = B.theaterno
+	    where status = 1
+	    and categoryno = 1
+	    and title like '%' || #{search} || '%'
+	</select>
+	
+	
+	
+	
+	<resultMap type="java.util.HashMap" id="MovieList">
+		<result property="theatername" 	column="theatername" 		javaType="String" />
+		<result property="regionno" 	column="regionno" 		    javaType="String" />
+		<result property="fk_regionno" 	column="fk_regionno" 		javaType="String" />
+		<result property="theaterno" 	column="theaterno" 		    javaType="String" />
+		
+	</resultMap>
+	<select id="getMovieList" parameterType="String" resultMap="MovieList">
+		 select theaterno, theatername
+		 from
+		 (
+		  select regionno 
+		  from tbl_region 
+		  group by rollup(regionno)
+		  )V 
+		  join tbl_theater B
+		  on V.regionno = B.fk_regionno
+		  where fk_regionno = #{regionno}
+	</select>
+	
+	<select id="selectTheaterno" parameterType="String" resultType="String">
+			select theaterno
+			from tbl_theater
+			where theatername=#{movie}
+	</select>
+	
+	<insert id="getQnAInsert" parameterType="HashMap">
+	   insert into tbl_serviceCenter(serviceno,categoryno,title, msg, writedate, cnt, status, commentCount,fk_email, important, fk_theaterno)
+	   values(seq_serviceno.nextval, 2, #{title}, #{msg}, default, default, default, default, #{email}, default, #{theaterno})
+	</insert>
+	
+	<select id="movieList" parameterType="String" resultMap="MovieList">			
+		  select theatername 
+		  from tbl_theater 
+		  where theatername like '%'||#{search}||'%'
+	</select>
+	
+	
+	
+	<resultMap type="java.util.HashMap" id="faqcategorylistMap">
+		<result property="categorycode" 	column="categorycode" 		javaType="String" />
+		<result property="title" 			column="title" 				javaType="String" />
+		<result property="search" 			column="search" 			javaType="String" />
+		<result property="content" 			column="content" 			javaType="String" />
+	</resultMap>
+	<select id="faqCategoryListSearch1" parameterType="HashMap" resultMap="faqcategorylistMap">
+			select case 
+		            when categorycode = 1 then '영화관이용' 
+		            when categorycode = 2 then '회원'
+		            when categorycode = 3 then '온라인'
+		            when categorycode = 4 then '할인혜택'
+		            when categorycode = 5 then '관람권'
+		            when categorycode = 6 then '기프트샵'
+		       else '전체' end as categorycode, TITLE, CONTENT 
+			from tbl_FAQ 
+			where categorycode = #{categorycode}
+			and title like '%'||#{search}||'%'
+	</select>
+	
+	
+	<!-- 할인 카드  -->
+	
+	<resultMap type="java.util.HashMap" id="getcardList">
+		<result property="cardno" 		  	  column="cardno" 			javaType="String" />
+		<result property="fk_seq_company" 	  column="fk_seq_company" 	javaType="String" />
+		<result property="cardname" 		  column="cardname" 		javaType="String" />
+		<result property="type"		          column="type" 			javaType="String" />
+		<result property="contents" 	  	  column="contents" 		javaType="String" />
+		<result property="img" 	  		  	  column="img" 				javaType="String" />
+		<result property="companyno" 	  column="companyno"		javaType="String" />
+		<result property="name" 	  	  column="name" 			javaType="String" />
+	</resultMap>
+	
+	<select id="getAllcardList" resultMap="getcardList">
+		select cardno, fk_seq_company, name as cardname
+			 , case when type = 0 then '현장할인' 
+			 		when type = 1 then '인터넷할인'
+			 		when type = 2 then '현장할인, 인터넷할인'
+			 else ' ' end as type		
+			 , contents, img
+		from tbl_card
+	</select>
+	
+
+	<select id="getcardcompany" resultMap="getcardList">
+		select name
+		from tbl_card_company
+	</select>
+	
+	<select id="cardSearch" resultMap="getcardList">
+		select A.name, B.cardno, B.fk_seq_company, B.name as cardname
+					 , case when B.type = 0 then '현장할인' 
+					 		when B.type = 1 then '인터넷할인'
+					 		when B.type = 2 then '현장할인, 인터넷할인'
+					   else ' ' end as type		
+					 , B.contents, B.img
+		from tbl_card_company A join tbl_card B
+		on A.companyno = B.fk_seq_company
+		where A.name like '%'||#{name}||'%'
+		<if test="search != null">
+		and B.name like '%'||#{search}||'%'
+		</if>
+	</select>
+	
+	
+</mapper> 

@@ -74,11 +74,6 @@ public class PlzRevService implements IPlzRevService {
 		return count;
 	}
 
-	@Override
-	public List<HashMap<String, String>> getMovieList(String regionno) {
-		List<HashMap<String, String>> list = dao.getMovieList(regionno);
-		return list;
-	}
 
 	@Override
 	public List<HashMap<String, String>> movieList(String search) {
@@ -86,7 +81,29 @@ public class PlzRevService implements IPlzRevService {
 		return list;
 	}
 
-	
+	@Override
+	public String selectTheaterno(String movie) {
+		String no = dao.selectTheaterno(movie);
+		return no;
+	}
+
+	@Override
+	public int getQnAInsert(HashMap<String, String> map) {
+		int n = dao.getQnAInsert(map);
+		return n;
+	}
+
+	@Override
+	public List<HashMap<String, String>> faqCategoryListSearch(String search) {
+		List<HashMap<String, String>> list = dao.faqCategoryListSearch(search);
+		return list;
+	}
+
+	@Override
+	public List<HashMap<String, String>> faqListSearch(HashMap<String, String> map) {
+		List<HashMap<String, String>> list = dao.faqListSearch(map);
+		return list;
+	}
 
 
 }

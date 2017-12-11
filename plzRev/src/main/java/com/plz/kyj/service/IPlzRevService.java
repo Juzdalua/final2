@@ -10,6 +10,8 @@ public interface IPlzRevService {
 
 	List<HashMap<String, String>> faqList();  		// 고객센터 메인(FAQ)
 
+	List<HashMap<String, String>> faqCategoryListSearch(String search); // FAQ 카테고리별 검색목록
+
 	List<HashMap<String, String>> getNoticeList(HashMap<String, String> map);	// 공지사항 메인
 
 	List<HashMap<String, String>> getNoticeList2(HashMap<String, String> map);
@@ -26,9 +28,18 @@ public interface IPlzRevService {
 	
 	int getTotalCount2(HashMap<String, String> map);
 	
-	List<HashMap<String, String>> getMovieList(String regionno);
-
 	List<HashMap<String, String>> movieList(String search);
+
+	String selectTheaterno(String movie); // 영화관 이름으로 영화관 번호 알아오기
+
+	int getQnAInsert(HashMap<String, String> map); // 1:1문의 등록
+
+	List<HashMap<String, String>> faqListSearch(HashMap<String, String> map);
+
+
+
+
+
 
 
 	

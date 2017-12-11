@@ -83,6 +83,32 @@ public class ServiceDAO implements IServiceDAO {
 	
 	}
 
+	@Override
+	public String selectTheaterno(String movie) {
+		String no = sqlsession.selectOne("plz.selectTheaterno", movie);
+		return no;
+	}
+
+	@Override
+	public int getQnAInsert(HashMap<String, String> map) {
+		int n = sqlsession.insert("plz.getQnAInsert", map);
+		return n;
+	}
+
+	@Override
+	public List<HashMap<String, String>> faqCategoryListSearch(String search) {
+		List<HashMap<String, String>> list = sqlsession.selectList("plz.faqCategoryListSearch", search);
+		return list;
+	}
+
+	@Override
+	public List<HashMap<String, String>> faqListSearch(HashMap<String, String> map) {
+		List<HashMap<String, String>> list = sqlsession.selectList("plz.faqListSearch2", map);
+		return list;
+	}
+
+
+
 
 
 

@@ -14,7 +14,6 @@
 	$(document).ready(function(){
 	   
 		
-		
 	});
 	
 	function myFunction(id) {
@@ -28,7 +27,23 @@
 	
 	}
 	
-
+	 function goSearch(categorycode) {
+	    	
+			var frm = document.searchFrm;
+			var search = $("#search").val();
+			
+			/* $("#categorycode").val('${categorycode}'); */
+			if(search.trim() == "") {
+				alert("검색어를 입력하세요!!");
+				$("#search").focus();
+				return;
+			}
+			else {
+				frm.submit();
+				frm.action="categorylist.pz";
+			}
+			
+		}
 	
 	
 </script>
@@ -49,21 +64,37 @@
 			<ul class="nav" style="text-align: left; padding-left:3px; font-size: 13pt; margin-top: 8px;">
 	    	<c:forEach var="vo" items="${codeList}">
 	    		<li style="display: inline; font-size: 11pt;">&nbsp;&nbsp;
+	    		<a style="display: inline;" href="<%= request.getContextPath()%>/categorylist.pz?categorycode=${vo.categorycode}">
+	    		${vo.categoryname}(${vo.cnt})</a>
+	    	<%-- 	
+	    		<c:if test="${empty search}">
 		    		<a style="display: inline;" href="<%= request.getContextPath()%>/categorylist.pz?categorycode=${vo.categorycode}">
 		    		${vo.categoryname}(${vo.cnt})&nbsp;&nbsp;</a>
+    			</c:if>
+				<c:if test="${not empty search}">
+		    		<a style="display: inline;" href="<%= request.getContextPath()%>/categorylist.pz?categorycode=${vo.categorycode}&search=${search}">
+		    		${vo.categoryname}(${vo.cnt})&nbsp;&nbsp;</a>
+    			</c:if> --%>
     			</li>
+    			
 	    	</c:forEach>
 		</ul>
 	</div>
 	</form>
 	<br/>
-
-	<div style="width: 75%; background-color:  #999999; height: 150px; ">
-		<br/><p></p>
-		<span style="font-weight: bold;">검색&nbsp;<input id="search" type="text" size="65"/></span>
-		<button type="button" style="margin-left: 5px; width: 70px; text-align: center; border: #351F65; background-color: #351F65; color:white; height: 30px;" onClick="goSearch();">검색</button><br/>
-		<p style="margin-top: 10px;border: 0.5px solid; width: 75.5%;  margin-left: 9%;"></p>
-		&nbsp;&nbsp;더 궁금한 점이 있거나, 이미 문의한 내용과 답변을 확인하려면? <a href="<%= request.getContextPath()%>/list3.pz">▶ 1:1문의 바로가기</a>  <a>▶ 나의 문의 내역 바로가기</a><br/>
+	<div style="width: 75%; background-color: #333333;  height: 150px; ">
+		<br/>
+		<p></p>
+		<form name="searchFrm">
+			<input type="hidden" id="categorycode" name="categorycode" value="${categorycode}"/>
+			<span style="font-weight: bold; color:white;">검색&nbsp;<input type="text" size="65" name="search" id="search" style=" color:black;"/></span>
+			<button type="button" style=" margin-left: 5px; width: 70px; text-align: center;border:#a04dff; background-color: #a04dff; color:white;  height: 30px;" onClick="goSearch('${categorycode}');">검색</button>
+		</form>
+		<br/>
+		
+		<p style="margin-top: 10px;border: 0.5px solid; width: 75.5%;  margin-left: 9%; color:white;"></p>
+		<span style="color:white">&nbsp;&nbsp;더 궁금한 점이 있거나, 이미 문의한 내용과 답변을 확인하려면? <a href="<%= request.getContextPath()%>/list3.pz">▶ 1:1문의 바로가기</a>  <a href="<%= request.getContextPath()%>/list3.pz">▶ 1:1문의 바로가기</a>  <a href="<%= request.getContextPath() %>/mypage.pz">▶ 나의 문의 내역 바로가기</a></span>
+		<br/>
 	</div>
 <br/><br/>
 
@@ -79,7 +110,7 @@
     </thead>
     
     <tbody>
-	    <c:if test="${empty cList}">
+	    <c:if test="${not empty faqList}">
 		    <c:forEach var="map" items="${faqList}" varStatus="status">
 		      <tr>
 		      	 <td align="center"  style="text-align: left; font-weight: bold;">Q ${map.categorycode}</a> </td>
@@ -95,10 +126,10 @@
 		    </c:forEach>
 	    </c:if>
 	      
-	    <c:if test="${not empty cList}">
+	    <c:if test="${empty faqList}">
 		    <c:forEach var="map" items="${cList}" varStatus="status">
 		      <tr>
-		      	 <td align="center"  style="text-align: left; font-weight: bold;">Q ${map.categorycode}</a> </td>
+		      	 <td align="center"  style="text-align: left; font-weight: bold;">Q ${map.categorycode}</td>
 			      	<td>
 						<p onClick="myFunction('Demo${status.count}')" class="w3-block" style="text-align: left; font-size: 13pt;" /> ${map.title}</p>
 					    <div id="Demo${status.count}" class="w3-light-grey w3-hide col-sm-15">	
@@ -114,7 +145,9 @@
     
   </table>
 </div>
-
+<c:if test="${empty faqList}">
+	검색어가 없습니다.
+</c:if>
 
 </body>
 </html>
